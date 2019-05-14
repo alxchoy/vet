@@ -7,38 +7,60 @@ class Login extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Container(
-            width: double.infinity,
-            child: Column(
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                Padding(
-                  child: Text(
-                    'Bienvenido',
-                    style: TextStyle(
-                      fontSize: 36.0,
-                      fontWeight: FontWeight.bold
-                    ),
+            alignment: Alignment.centerLeft,
+            child: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  padding: EdgeInsets.only(left: 35.0),
-                ),
-                Padding(
-                  child: Text(
-                    'Regístrate para ingresar',
-                    style: TextStyle(
-                      fontSize: 18.0
+                  Padding(
+                    child: Text(
+                      'Bienvenido',
+                      style: TextStyle(
+                        fontSize: 36.0,
+                        fontWeight: FontWeight.bold
+                      ),
                     ),
+                    padding: EdgeInsets.only(left: 35.0),
                   ),
-                  padding: EdgeInsets.only(left: 35.0),
-                )
-              ],
-              crossAxisAlignment: CrossAxisAlignment.start
+                  Padding(
+                    child: Text(
+                      'Regístrate para ingresar',
+                      style: TextStyle(
+                        fontSize: 18.0
+                      ),
+                    ),
+                    padding: EdgeInsets.only(left: 35.0),
+                  )
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start
+              )
             )
           ),
           Container(
             child: LoginForm(),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Olvidaste tu contraseña?'
+                  ),
+                  SizedBox(height: 15.0,),
+                  FloatingActionButton(
+                    backgroundColor: Colors.red,
+                    child: Icon(Icons.arrow_forward),
+                    onPressed: () {},
+                  )
+                ],
+                crossAxisAlignment: CrossAxisAlignment.end,
+              ),
+              padding: EdgeInsets.only(right: 35.0),
+            )
           )
         ],
       )
@@ -53,23 +75,6 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  FocusNode _focusNode = FocusNode();
-
-  _focusListener() {
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    _focusNode.addListener(_focusListener);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _focusNode.removeListener(_focusListener);
-    super.dispose();
-  }
 
   final userInput = TextFormField(
     decoration: InputDecoration(

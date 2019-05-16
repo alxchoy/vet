@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../providers/services/shared-preferences.dart';
+
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -161,12 +163,46 @@ class _LoginFormState extends State<LoginForm> {
           _formKey.currentState.save();
           print(_userName);
           print(_userPassword);
+          doLogin(_userName, _userPassword);
         }
       },
       padding: EdgeInsets.all(20.0),
       shape: CircleBorder(),
     );
   }
+
+  void doLogin(String userName, String password) async {
+    Map<String, String> body = {
+      'userName': userName,
+      'password': password,
+      'grant_type': 'password',
+      'rolId': '2'
+    };
+
+    final response = await http.post(
+      'http://vetitapp-001-site1.itempurl.com/token',
+      body: body,
+      headers: {
+        "accept": "application/x-www-form-urlencoded",
+        "content-type": "application/x-www-form-urlencoded"
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print('correct');
+      print(data['acces_token']);
+
+    } else {
+      print(json.decode(response.body));
+      print('incorrect');
+      throw Exception('Failed to load post');
+    }
+
+    print(response.body);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

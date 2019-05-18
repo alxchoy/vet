@@ -1,64 +1,66 @@
-import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../providers/services/shared-preferences.dart';
+import '../providers/services/auth-service.dart';
 
-class Login extends StatelessWidget {
+
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool loadingRequest = false;
+
+  void loadRequest(loading) {
+    setState(() {
+      loadingRequest = loading;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.centerLeft,
-                child: SafeArea(
+          child: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Positioned(
                   child: Column(
                     children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      Padding(
-                        child: Text(
-                          'Bienvenido',
-                          style: TextStyle(
-                            fontSize: 36.0,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        padding: EdgeInsets.only(left: 35.0),
-                      ),
-                      Padding(
-                        child: Text(
-                          'Regístrate para ingresar',
-                          style: TextStyle(
-                            fontSize: 18.0
-                          ),
-                        ),
-                        padding: EdgeInsets.only(left: 35.0),
-                      )
-                    ],
-                    crossAxisAlignment: CrossAxisAlignment.start
+                      LoginHeader(),
+                      LoginForm(callback: loadRequest)
+                    ]
                   )
-                )
-              ),
-              Container(
-                child: LoginForm(),
-              ),
-              Container(
-                child: Image.asset('assets/img/pet.png', fit: BoxFit.cover,),
-                // margin: EdgeInsets.only(top: 10.0),
-                width: double.infinity
-              )
-            ],
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  height: 200.0,
+                  child: Container(
+                    color: Colors.red,
+                    child: Image.asset('assets/img/pet.png', fit: BoxFit.cover)
+                  )
+                ),
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: loadingRequest ? Container(
+                    child: Center(child: Loading()),
+                    color: Color.fromRGBO(0, 0, 0, 0.3),
+                  ) : Container()
+                ),
+              ]
+            )
           ),
-          color: Colors.white
+          color: Colors.white,
+          height: MediaQuery.of(context).size.height
         ),
       )
     );
@@ -66,62 +68,55 @@ class Login extends StatelessWidget {
 }
 
 class LoginForm extends StatefulWidget {
+  final callback;
+
+  LoginForm({this.callback});
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  String _userName;
-  String _userPassword;
+  static String _userName;
+  static String _userPassword;
 
-  final recoveryPass = Text(
-    'Recuperar contraseña',
-    style: TextStyle(
-      color: Color.fromRGBO(90, 168, 158, 1.0),
-      fontSize: 17.0
-    ),
-  );
-
-  TextFormField userInput() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Usuario',
-        labelStyle: TextStyle(
-          color: Colors.grey[700],
-          fontSize: 18
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.grey[350]),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(27.0),
-          borderSide: BorderSide(color: Colors.grey[350]),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(27.0),
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0)
-      ),
-      onSaved: (val) => _userName = val,
-      validator: (val) {
-        if (val.isEmpty) {
-          return 'Campo requerido';
-        }
+  Map<String, dynamic> _userInput = {
+    'label': 'Usuario',
+    'onSave': (val) => _userName = val,
+    'obscureText': false,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
       }
+    }
+  };
+
+  Map<String, dynamic> _passInput = {
+    'label': 'Contraseña',
+    'onSave': (val) => _userPassword = val,
+    'obscureText': true,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
+
+  Text recoveryPassword() {
+    return Text(
+      'Recuperar contraseña',
+      style: TextStyle(
+        color: Color.fromRGBO(90, 168, 158, 1.0),
+        fontSize: 17.0
+      ),
     );
   }
 
-  TextFormField userPassowrd() {
+  TextFormField inputForm(Map<String, dynamic> inputConfig) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Contraseña',
+        labelText: inputConfig['label'],
         labelStyle: TextStyle(
           color: Colors.grey[700],
           fontSize: 18
@@ -144,12 +139,9 @@ class _LoginFormState extends State<LoginForm> {
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0)
       ),
-      onSaved: (val) => _userPassword = val,
-      validator: (val) {
-        if (val.isEmpty) {
-          return 'Campo requerido';
-        }
-      }
+      obscureText: inputConfig['obscureText'],
+      onSaved: inputConfig['onSave'],
+      validator: inputConfig['validator']
     );
   }
 
@@ -161,9 +153,7 @@ class _LoginFormState extends State<LoginForm> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          print(_userName);
-          print(_userPassword);
-          doLogin(_userName, _userPassword);
+          _saveTokenResponse();
         }
       },
       padding: EdgeInsets.all(20.0),
@@ -171,38 +161,22 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void doLogin(String userName, String password) async {
-    Map<String, String> body = {
-      'userName': userName,
-      'password': password,
-      'grant_type': 'password',
-      'rolId': '2'
-    };
-
-    final response = await http.post(
-      'http://vetitapp-001-site1.itempurl.com/token',
-      body: body,
-      headers: {
-        "accept": "application/x-www-form-urlencoded",
-        "content-type": "application/x-www-form-urlencoded"
-      }
-    );
+  void _saveTokenResponse() async {
+    widget.callback(true);
+    final response = await AuthService.login(_userName, _userPassword);
 
     if (response.statusCode == 200) {
+      widget.callback(false);
       final data = json.decode(response.body);
-      print('correct');
-      print(data['acces_token']);
-
+      print(data['access_token']);
+      SharedPreferencesVet.setToken(data['access_token']);
     } else {
-      print(json.decode(response.body));
-      print('incorrect');
+      widget.callback(false);
+      print(response.statusCode);
+      print(response.body);
       throw Exception('Failed to load post');
     }
-
-    print(response.body);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -211,26 +185,73 @@ class _LoginFormState extends State<LoginForm> {
       child: Container(
         child: Column(
           children: <Widget>[
-            userInput(),
+            inputForm(_userInput),
             SizedBox(height: 20.0,),
-            userPassowrd(),
+            inputForm(_passInput),
             Container(
               alignment: Alignment.centerRight,
               child: Column(
                 children: <Widget>[
-                  recoveryPass,
-                  SizedBox(height: 25.0,),
+                  recoveryPassword(),
+                  SizedBox(height: 20.0,),
                   formBtn()
                 ],
                 crossAxisAlignment: CrossAxisAlignment.end,
               ),
-              margin: EdgeInsets.only(top: 20.0),
+              margin: EdgeInsets.only(top: 15.0),
             )
           ],
         ),
         margin: EdgeInsets.fromLTRB(0, 30, 0, 7),
         padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
       )
+    );
+  }
+}
+
+class LoginHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context),
+          ),
+          Padding(
+            child: Text(
+              'Bienvenido',
+              style: TextStyle(
+                fontSize: 36.0,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+            padding: EdgeInsets.only(left: 35.0),
+          ),
+          Padding(
+            child: Text(
+              'Regístrate para ingresar',
+              style: TextStyle(
+                fontSize: 18.0
+              ),
+            ),
+            padding: EdgeInsets.only(left: 35.0),
+          )
+        ],
+        crossAxisAlignment: CrossAxisAlignment.start
+      )
+    );
+  }
+}
+
+class Loading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CircularProgressIndicator(
+      backgroundColor: Colors.grey[350],
+      valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
     );
   }
 }

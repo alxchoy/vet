@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../providers/services/shared-preferences.dart';
-import '../providers/services/auth-service.dart';
+import '../providers/services/client-service.dart';
 
-
-class Login extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginScreenState extends State<LoginScreen> {
   bool loadingRequest = false;
 
   void loadRequest(loading) {
@@ -163,13 +162,16 @@ class _LoginFormState extends State<LoginForm> {
 
   void _saveTokenResponse() async {
     widget.callback(true);
-    final response = await AuthService.login(_userName, _userPassword);
+    final response = await ClientService.login(_userName, _userPassword);
 
     if (response.statusCode == 200) {
-      widget.callback(false);
       final data = json.decode(response.body);
-      print(data['access_token']);
+      final dataClient = await ClientService.getClientId(data['access_token']);
+
       SharedPreferencesVet.setToken(data['access_token']);
+      SharedPreferencesVet.setClientId(dataClient['idLogIn']);
+      widget.callback(false);
+      Navigator.pushNamed(context, '/navigation');
     } else {
       widget.callback(false);
       print(response.statusCode);

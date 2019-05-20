@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import './login.dart';
-
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class Home extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 120.0),
                   ),
                   color: Color.fromRGBO(0, 0, 0, 0.0),
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Login())),
+                  onPressed: () => Navigator.pushNamed(context, '/login'),
                   padding: EdgeInsets.all(0.0),
                 ),
                 SizedBox(height: 20),

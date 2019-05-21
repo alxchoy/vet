@@ -10,23 +10,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Client _client;
-  Widget _profile;
-
-  @override
-  void initState() {
-    super.initState();
-    _getClientData();
-  }
-
-  Future<void> _getClientData() async {
+  Future<dynamic> _getClientData() async {
     final token = await SharedPreferencesVet.getToken();
     final clientId = await SharedPreferencesVet.getClientId();
     final data = await ClientService.getClientData(token, clientId);
-    print('wwwww');
-    print(data);
 
-    _profile = ProfileForm(clientData: data);
+    return data;
   }
 
   Widget header() {
@@ -62,7 +51,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: <Widget>[
             header(),
             SizedBox(height: 40.0),
-            _profile
+            FutureBuilder(
+              future: _getClientData(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if(snapshot.hasData) {
+                  print(snapshot.data);
+                  return snapshot.data != null ? ProfileForm(clientData: snapshot.data) : Text('Pending...');
+                } else {
+                  return Text('Error');
+                }
+              },
+            )
           ],
         ),
         padding: EdgeInsets.all(20.0)
@@ -94,91 +93,89 @@ class _ProfileFormState extends State<ProfileForm> {
   @override
   void initState() {
     super.initState();
-    print('asdf');
-    print(widget.clientData);
     _clientData = widget.clientData;
   }
 
-  // Map<String, dynamic> _userNameInput = {
-  //   'initialValue': _clientData.clientFullName,
-  //   'label': 'Nombre',
-  //   'onSave': (val) => _userName = val,
-  //   'obscureText': false,
-  //   'validator': (val) {
-  //     if (val.isEmpty) {
-  //       return 'Campo requerido';
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> _userNameInput = {
+    'initialValue': _clientData.clientFullName,
+    'label': 'Nombre',
+    'onSave': (val) => _userName = val,
+    'obscureText': false,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
 
-  // Map<String, dynamic> _userDocumentNumberInput = {
-  //   'initialValue': _clientData.clientDocumentNumber,
-  //   'label': 'Nro. documento',
-  //   'onSave': (val) => _userDocumentNumber = val,
-  //   'obscureText': false,
-  //   'validator': (val) {
-  //     if (val.isEmpty) {
-  //       return 'Campo requerido';
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> _userDocumentNumberInput = {
+    'initialValue': _clientData.clientDocumentNumber,
+    'label': 'Nro. documento',
+    'onSave': (val) => _userDocumentNumber = val,
+    'obscureText': false,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
 
-  // Map<String, dynamic> _userEmailInput = {
-  //   'initialValue': _clientData.clientEmail,
-  //   'label': 'Correo',
-  //   'onSave': (val) => _userEmail = val,
-  //   'obscureText': false,
-  //   'validator': (val) {
-  //     if (val.isEmpty) {
-  //       return 'Campo requerido';
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> _userEmailInput = {
+    'initialValue': _clientData.clientEmail,
+    'label': 'Correo',
+    'onSave': (val) => _userEmail = val,
+    'obscureText': false,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
 
-  // Map<String, dynamic> _userAliasInput = {
-  //   'initialValue': _clientData.userName,
-  //   'label': 'Usuario',
-  //   'onSave': (val) => _userAlias = val,
-  //   'obscureText': false,
-  //   'validator': (val) {
-  //     if (val.isEmpty) {
-  //       return 'Campo requerido';
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> _userAliasInput = {
+    'initialValue': _clientData.userName,
+    'label': 'Usuario',
+    'onSave': (val) => _userAlias = val,
+    'obscureText': false,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
 
-  // Map<String, dynamic> _userCurrentPassInput = {
-  //   'label': 'Actual',
-  //   'onSave': (val) => _userCurrentPass = val,
-  //   'obscureText': true,
-  //   'validator': (val) {
-  //     if (val.isEmpty) {
-  //       return 'Campo requerido';
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> _userCurrentPassInput = {
+    'label': 'Actual',
+    'onSave': (val) => _userCurrentPass = val,
+    'obscureText': true,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
 
-  // Map<String, dynamic> _userNewPassInput = {
-  //   'label': 'Nueva contraseña',
-  //   'onSave': (val) => _userNewPass = val,
-  //   'obscureText': true,
-  //   'validator': (val) {
-  //     if (val.isEmpty) {
-  //       return 'Campo requerido';
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> _userNewPassInput = {
+    'label': 'Nueva contraseña',
+    'onSave': (val) => _userNewPass = val,
+    'obscureText': true,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
 
-  // Map<String, dynamic> _userValidPassInput = {
-  //   'label': 'Repetir contraseña',
-  //   'onSave': (val) => _userValidPass = val,
-  //   'obscureText': true,
-  //   'validator': (val) {
-  //     if (val.isEmpty) {
-  //       return 'Campo requerido';
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> _userValidPassInput = {
+    'label': 'Repetir contraseña',
+    'onSave': (val) => _userValidPass = val,
+    'obscureText': true,
+    'validator': (val) {
+      if (val.isEmpty) {
+        return 'Campo requerido';
+      }
+    }
+  };
 
   TextFormField inputForm(Map<String, dynamic> inputConfig) {
     return TextFormField(
@@ -243,31 +240,31 @@ class _ProfileFormState extends State<ProfileForm> {
     return Form(
       key: _formKey,
       child: Container(
-        // child: Column(
-        //   children: <Widget>[
-        //     inputForm(_userNameInput),
-        //     SizedBox(height: 20.0),
-        //     inputForm(_userDocumentNumberInput),
-        //     SizedBox(height: 20.0),
-        //     inputForm(_userEmailInput),
-        //     SizedBox(height: 20.0),
-        //     inputForm(_userAliasInput),
-        //     Container(
-        //       child: Text('Contraseña', style: TextStyle(fontSize: 22.0)),
-        //       decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[300], width: 2.0))),
-        //       margin: EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
-        //       padding: EdgeInsets.only(top: 20.0),
-        //       width: double.infinity
-        //     ),
-        //     inputForm(_userCurrentPassInput),
-        //     SizedBox(height: 20.0),
-        //     inputForm(_userNewPassInput),
-        //     SizedBox(height: 20.0),
-        //     inputForm(_userValidPassInput),
-        //     SizedBox(height: 40.0),
-        //     btnForm()
-        //   ],
-        // )
+        child: Column(
+          children: <Widget>[
+            inputForm(_userNameInput),
+            SizedBox(height: 20.0),
+            inputForm(_userDocumentNumberInput),
+            SizedBox(height: 20.0),
+            inputForm(_userEmailInput),
+            SizedBox(height: 20.0),
+            inputForm(_userAliasInput),
+            Container(
+              child: Text('Contraseña', style: TextStyle(fontSize: 22.0)),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[300], width: 2.0))),
+              margin: EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
+              padding: EdgeInsets.only(top: 20.0),
+              width: double.infinity
+            ),
+            inputForm(_userCurrentPassInput),
+            SizedBox(height: 20.0),
+            inputForm(_userNewPassInput),
+            SizedBox(height: 20.0),
+            inputForm(_userValidPassInput),
+            SizedBox(height: 40.0),
+            btnForm()
+          ],
+        )
       )
     );
   }

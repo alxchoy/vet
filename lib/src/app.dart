@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './screens/home.dart';
 import './screens/login.dart';
 import './screens/navigation.dart';
+import './screens/pet.dart';
 
 class App extends StatelessWidget {
   @override
@@ -12,7 +13,8 @@ class App extends StatelessWidget {
       routes: {
         '/': (context) => Home(),
         '/login': (context) => LoginScreen(),
-        '/navigation': (context) => NavigationScreen()
+        '/navigation': (context) => NavigationScreen(),
+        '/pet': (context) => PetScreen()
       },
       theme: ThemeData(
         primaryColor: Color.fromRGBO(90, 168, 158, 1.0)

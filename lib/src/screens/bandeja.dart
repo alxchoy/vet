@@ -48,7 +48,15 @@ class _BandejaScreenState extends State<BandejaScreen> {
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0
       ),
-      itemBuilder: (BuildContext context, int index) => CardPet(pet: snapshot.data[index]),
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          child: CardPet(pet: snapshot.data[index]),
+          onTap: () {
+            print(index);
+            Navigator.pushNamed(context, '/pet');
+          }
+        );
+      },
       itemCount: snapshot.data.length,
       padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 30.0),
     );

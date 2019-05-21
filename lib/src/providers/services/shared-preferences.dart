@@ -20,4 +20,14 @@ class SharedPreferencesVet {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString('vet_clientId') ?? null;
   }
+
+  static Future<void> setLookups(String lookups) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('vet_lookups', lookups);
+  }
+
+  static Future<String> getLookups() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('vet_lookups') ?? null;
+  }
 }

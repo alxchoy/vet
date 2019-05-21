@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/pet-model.dart';
+import '../../shared/constants.dart';
 
 class PetService {
   static Future<List<Pet>> getPetsList(String token, String clientId) async {
-    final response = await http.get('http://vetitapp-001-site1.itempurl.com/api/pet/ByClient/$clientId',
+    final response = await http.get("${constants['urlApi']}/pet/ByClient/$clientId",
       headers: {
         'Authorization': 'Bearer $token'
       }

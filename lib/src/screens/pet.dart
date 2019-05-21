@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../shared/widgets/vet-input.dart';
+import '../shared/widgets/vet-combo.dart';
 
 class PetScreen extends StatefulWidget {
   PetScreen({Key key}) : super(key: key);
@@ -107,6 +108,16 @@ class _PetFormState extends State<PetForm> {
           Text('General', style: TextStyle(fontSize: 22.0)),
           SizedBox(height: 15.0),
           VetInput(label: 'Nombre', initValue: ''),
+          SizedBox(height: 20.0),
+          VetCombo(
+            icon: Icon(Icons.account_box),
+            label: 'Especie',
+            lookupType: 'species',
+            keyProperties: {
+              'keyValue': 'specieId',
+              'keyDescription': 'specieName'
+            }
+          )
         ]
       )
     );

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/client-model.dart';
+import '../../shared/constants.dart';
 
 class ClientService {
   static Future<dynamic> login(String userName, String password) async {
@@ -15,7 +16,7 @@ class ClientService {
     };
 
     return http.post(
-    'http://vetitapp-001-site1.itempurl.com/token',
+    "${constants['urlBase']}/token",
       body: bodyRequest,
       headers: {
         "accept": "application/x-www-form-urlencoded",
@@ -25,7 +26,7 @@ class ClientService {
   }
 
   static Future<dynamic> getClientId(String token) async {
-    final response = await http.get('http://vetitapp-001-site1.itempurl.com/api/token/claims',
+    final response = await http.get("${constants['urlApi']}/token/claims",
       headers: {
         'Authorization': 'Bearer $token'
       }
@@ -39,7 +40,7 @@ class ClientService {
   }
 
   static Future<Client> getClientData(String token, String clientId) async {
-    final response = await http.get('http://vetitapp-001-site1.itempurl.com/api/client/$clientId',
+    final response = await http.get("${constants['urlApi']}/client/$clientId",
       headers: {
         'Authorization': 'Bearer $token'
       }

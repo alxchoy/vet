@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../providers/services/shared-preferences.dart';
 import '../providers/services/client-service.dart';
+import '../providers/services/lookups-service.dart';
+
+import '../shared/widgets/vet-input.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -80,28 +83,6 @@ class _LoginFormState extends State<LoginForm> {
   static String _userName;
   static String _userPassword;
 
-  Map<String, dynamic> _userInput = {
-    'label': 'Usuario',
-    'onSave': (val) => _userName = val,
-    'obscureText': false,
-    'validator': (val) {
-      if (val.isEmpty) {
-        return 'Campo requerido';
-      }
-    }
-  };
-
-  Map<String, dynamic> _passInput = {
-    'label': 'Contraseña',
-    'onSave': (val) => _userPassword = val,
-    'obscureText': true,
-    'validator': (val) {
-      if (val.isEmpty) {
-        return 'Campo requerido';
-      }
-    }
-  };
-
   Text recoveryPassword() {
     return Text(
       'Recuperar contraseña',
@@ -109,38 +90,6 @@ class _LoginFormState extends State<LoginForm> {
         color: Color.fromRGBO(90, 168, 158, 1.0),
         fontSize: 17.0
       ),
-    );
-  }
-
-  TextFormField inputForm(Map<String, dynamic> inputConfig) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: inputConfig['label'],
-        labelStyle: TextStyle(
-          color: Colors.grey[700],
-          fontSize: 18
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.grey[350]),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(27.0),
-          borderSide: BorderSide(color: Colors.grey[350]),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(27.0),
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0)
-      ),
-      obscureText: inputConfig['obscureText'],
-      onSaved: inputConfig['onSave'],
-      validator: inputConfig['validator']
     );
   }
 
@@ -153,6 +102,7 @@ class _LoginFormState extends State<LoginForm> {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           _saveTokenResponse();
+          _loadAllLookups();
         }
       },
       padding: EdgeInsets.all(20.0),
@@ -170,26 +120,32 @@ class _LoginFormState extends State<LoginForm> {
 
       SharedPreferencesVet.setToken(data['access_token']);
       SharedPreferencesVet.setClientId(dataClient['idLogIn']);
-      widget.callback(false);
       Navigator.pushNamed(context, '/navigation');
     } else {
       widget.callback(false);
       print(response.statusCode);
       print(response.body);
-      throw Exception('Failed to load post');
+      throw Exception('Failed to load post save token');
     }
+  }
+
+  void _loadAllLookups() async {
+    final lookups = await LookupsService.loadLookups();
+    SharedPreferencesVet.setLookups(json.encode(lookups));
+    widget.callback(false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      autovalidate: true,
       key: _formKey,
       child: Container(
         child: Column(
           children: <Widget>[
-            inputForm(_userInput),
+            VetInput(label: 'Usuario', onSave: (val) => _userName = val),
             SizedBox(height: 20.0,),
-            inputForm(_passInput),
+            VetInput(label: 'Contraseña', onSave: (val) => _userPassword = val, inputType: 'password'),
             Container(
               alignment: Alignment.centerRight,
               child: Column(

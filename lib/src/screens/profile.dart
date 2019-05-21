@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veterinary/src/shared/widgets/vet-combo.dart';
 
 import '../providers/services/shared-preferences.dart';
 import '../providers/services/client-service.dart';
@@ -122,6 +123,7 @@ class _ProfileFormState extends State<ProfileForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
+      autovalidate: true,
       key: _formKey,
       child: Container(
         child: Column(
@@ -130,6 +132,15 @@ class _ProfileFormState extends State<ProfileForm> {
               label: 'Nombre',
               onSave: (val) => _userDocumentNumber = val,
               initValue: widget.clientData.clientFullName
+            ),
+            SizedBox(height: 20.0),
+            VetCombo(
+              label: 'Tipo documento',
+              lookupType: 'documents',
+              keyProperties: {
+                'keyValue': 'id',
+                'keyDescription': 'description'
+              }
             ),
             SizedBox(height: 20.0),
             VetInput(

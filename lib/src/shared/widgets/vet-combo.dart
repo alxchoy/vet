@@ -1,16 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../../providers/services/shared-preferences.dart';
+import '../constants.dart';
 
 class VetCombo extends StatefulWidget {
   final Icon icon;
   final String lookupType;
   final String label;
   final Map<String, String> keyProperties;
+  final dynamic onChange;
+  final int dependingValue;
 
-  VetCombo({this.icon, this.lookupType, this.label, this.keyProperties});
+  VetCombo({this.icon, this.lookupType, this.label, this.keyProperties, this.onChange, this.dependingValue});
 
   @override
   _VetComboState createState() => _VetComboState();
@@ -26,14 +30,34 @@ class _VetComboState extends State<VetCombo> {
     super.initState();
   }
 
-  void _loadLookup() async {
-    final lookup = await SharedPreferencesVet.getLookups();
-    final lookupDecode = json.decode(lookup);
+  @override
+  void didUpdateWidget(VetCombo oldWidget) {
+    if (oldWidget.dependingValue != widget.dependingValue) {
+      _loadLookup();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
-    setState(() {
-      _lookupService = lookupDecode[widget.lookupType];
-      print(_lookupService);
-    });
+  void _loadLookup() async {
+    var lookup;
+    var lookupDecode;
+
+    if (widget.lookupType == 'races' && widget.dependingValue != null) {
+      lookup = await http.get("${constants['urlApi']}/maintenance/race/search?specieId=${widget.dependingValue}&filter");
+      lookupDecode = json.decode(lookup.body);
+
+      setState(() {
+        _lookupService = lookupDecode;
+        _selectValue = null;
+      });
+    } else {
+      lookup = await SharedPreferencesVet.getLookups();
+      lookupDecode = json.decode(lookup);
+
+      setState(() {
+        _lookupService = lookupDecode[widget.lookupType];
+      });
+    }
   }
 
   @override
@@ -66,12 +90,13 @@ class _VetComboState extends State<VetCombo> {
               onChanged: (value) {
                 setState(() {
                   _selectValue = value;
-                  state.didChange(value);
+                  // state.didChange(value);
                 });
+                widget.onChange(value);
               },
               value: _selectValue
             )
-          ) : Container()
+          ) : CircularProgressIndicator()
         );
       }
     );

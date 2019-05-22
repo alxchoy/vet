@@ -78,6 +78,9 @@ class _PetScreenState extends State<PetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Pet')
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -99,26 +102,81 @@ class PetForm extends StatefulWidget {
 }
 
 class _PetFormState extends State<PetForm> {
+  final _formKey = GlobalKey<FormState>();
+  int _specieId;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text('General', style: TextStyle(fontSize: 22.0)),
-          SizedBox(height: 15.0),
-          VetInput(label: 'Nombre', initValue: ''),
-          SizedBox(height: 20.0),
-          VetCombo(
-            icon: Icon(Icons.account_box),
-            label: 'Especie',
-            lookupType: 'species',
-            keyProperties: {
-              'keyValue': 'specieId',
-              'keyDescription': 'specieName'
-            }
-          )
-        ]
+    return Form(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('General', style: TextStyle(fontSize: 22.0)),
+            SizedBox(height: 15.0),
+            VetInput(label: 'Nombre', icon: Icon(Icons.account_box, size: 50.0)),
+            SizedBox(height: 20.0),
+            VetCombo(
+              icon: Icon(Icons.account_box, size: 50.0),
+              label: 'Especie',
+              lookupType: 'species',
+              keyProperties: {
+                'keyValue': 'specieId',
+                'keyDescription': 'specieName'
+              },
+              onChange: (val) {
+                print(val);
+
+                setState(() {
+                  _specieId = val;
+                });
+              },
+            ),
+            SizedBox(height: 20.0),
+            VetCombo(
+              dependingValue: _specieId,
+              icon: Icon(Icons.account_box, size: 50.0),
+              keyProperties: {
+                'keyValue': 'raceId',
+                'keyDescription': 'raceName'
+              },
+              label: 'Raza',
+              lookupType: 'races'
+            ),
+            SizedBox(height: 20.0),
+            VetCombo(
+              icon: Icon(Icons.account_box, size: 50.0),
+              label: 'Sexo',
+              lookupType: 'sex',
+              keyProperties: {
+                'keyValue': 'id',
+                'keyDescription': 'description'
+              }
+            ),
+            SizedBox(height: 20.0),
+            VetCombo(
+              icon: Icon(Icons.account_box, size: 50.0),
+              label: 'Tamaño',
+              lookupType: 'size',
+              keyProperties: {
+                'keyValue': 'id',
+                'keyDescription': 'description'
+              }
+            ),
+            SizedBox(height: 20.0),
+            VetInput(label: 'Peso', icon: Icon(Icons.account_box, size: 50.0)),
+            SizedBox(height: 20.0),
+            VetCombo(
+              icon: Icon(Icons.account_box, size: 50.0),
+              label: 'Habitat',
+              lookupType: 'habitat',
+              keyProperties: {
+                'keyValue': 'id',
+                'keyDescription': 'description'
+              }
+            )
+          ]
+        )
       )
     );
   }

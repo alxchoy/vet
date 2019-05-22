@@ -4,10 +4,11 @@ class VetInput extends StatefulWidget {
   final String label;
   final String initValue;
   final String inputType;
+  final Icon icon;
   final String validationType;
   final dynamic onSave;
 
-  VetInput({this.label, this.initValue, this.validationType, this.onSave, this.inputType});
+  VetInput({this.label, this.initValue, this.validationType, this.onSave, this.inputType, this.icon});
 
 
   @override
@@ -19,6 +20,7 @@ class _VetInputState extends State<VetInput> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
+        icon: widget.icon ?? null,
         labelText: widget.label,
         labelStyle: TextStyle(
           color: Colors.grey[700],

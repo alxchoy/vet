@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../providers/models/pet-model.dart';
 import '../shared/widgets/vet-input.dart';
 import '../shared/widgets/vet-combo.dart';
+import '../shared/widgets/vet-date.dart';
 
 class PetScreen extends StatefulWidget {
-  PetScreen({Key key}) : super(key: key);
 
+  @override
   _PetScreenState createState() => _PetScreenState();
 }
 
@@ -77,6 +79,8 @@ class _PetScreenState extends State<PetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Pet pet = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Pet')
@@ -86,7 +90,7 @@ class _PetScreenState extends State<PetScreen> {
           child: Column(
             children: <Widget>[
               petHeader(),
-              PetForm()
+              PetForm(pet: pet)
             ]
           ),
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0)
@@ -97,40 +101,78 @@ class _PetScreenState extends State<PetScreen> {
 }
 
 class PetForm extends StatefulWidget {
+  final Pet pet;
+
+  PetForm({this.pet});
+
   @override
   _PetFormState createState() => _PetFormState();
 }
 
 class _PetFormState extends State<PetForm> {
   final _formKey = GlobalKey<FormState>();
-  int _specieId;
+  bool _autovalidate = false;
+  var _specieId;
+  var _raceId;
+  var _sexId;
+  var _sizeId;
+  var _habitatId;
+
+  FlatButton btnForm() {
+    return FlatButton(
+      child: Container(
+        child: Center(
+          child: Text(
+            'Guardar'.toUpperCase(),
+            style: TextStyle(fontSize: 24, color: Colors.white),
+          )
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50.0),
+          boxShadow: <BoxShadow>[
+            BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.5), blurRadius: 5.0)
+          ],
+          color: Color.fromRGBO(90, 168, 158, 1.0)
+        ),
+        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0),
+        width: double.infinity,
+      ),
+      color: Color.fromRGBO(0, 0, 0, 0.0),
+      onPressed: () {
+        if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
+        } else {
+          setState(() => _autovalidate = true);
+        }
+      },
+      padding: EdgeInsets.all(0.0),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      autovalidate: _autovalidate,
+      key: _formKey,
       child: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text('General', style: TextStyle(fontSize: 22.0)),
             SizedBox(height: 15.0),
-            VetInput(label: 'Nombre', icon: Icon(Icons.account_box, size: 50.0)),
+            VetInput(icon: Icon(Icons.account_box, size: 50.0), initValue: widget.pet.petName, label: 'Nombre'),
+            SizedBox(height: 20.0),
+            VetDate(icon: Icon(Icons.account_box, size: 50.0), label: 'Fecha de nacimiento'),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
-              label: 'Especie',
-              lookupType: 'species',
               keyProperties: {
                 'keyValue': 'specieId',
                 'keyDescription': 'specieName'
               },
-              onChange: (val) {
-                print(val);
-
-                setState(() {
-                  _specieId = val;
-                });
-              },
+              label: 'Especie',
+              lookupType: 'species',
+              onChange: (val) => setState(() => _specieId = val)
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -141,40 +183,47 @@ class _PetFormState extends State<PetForm> {
                 'keyDescription': 'raceName'
               },
               label: 'Raza',
-              lookupType: 'races'
+              lookupType: 'races',
+              onChange: (val) => setState(() => _raceId = val)
             ),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
+              initValue: widget.pet.sexId,
+              keyProperties: {
+                'keyValue': 'id',
+                'keyDescription': 'description'
+              },
               label: 'Sexo',
               lookupType: 'sex',
-              keyProperties: {
-                'keyValue': 'id',
-                'keyDescription': 'description'
-              }
+              onChange: (val) => setState(() => _sexId = val)
             ),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
+              keyProperties: {
+                'keyValue': 'id',
+                'keyDescription': 'description'
+              },
               label: 'Tamaño',
               lookupType: 'size',
-              keyProperties: {
-                'keyValue': 'id',
-                'keyDescription': 'description'
-              }
+              onChange: (val) => setState(() => _sizeId = val)
             ),
             SizedBox(height: 20.0),
-            VetInput(label: 'Peso', icon: Icon(Icons.account_box, size: 50.0)),
+            VetInput(icon: Icon(Icons.account_box, size: 50.0), label: 'Peso'),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
-              label: 'Habitat',
-              lookupType: 'habitat',
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
-              }
-            )
+              },
+              label: 'Habitat',
+              lookupType: 'habitat',
+              onChange: (val) => setState(() => _habitatId = val)
+            ),
+            SizedBox(height: 40.0),
+            btnForm()
           ]
         )
       )

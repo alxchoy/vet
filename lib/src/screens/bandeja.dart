@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../providers/services/pet-service.dart';
@@ -52,8 +51,7 @@ class _BandejaScreenState extends State<BandejaScreen> {
         return GestureDetector(
           child: CardPet(pet: snapshot.data[index]),
           onTap: () {
-            print(index);
-            Navigator.pushNamed(context, '/pet');
+            Navigator.pushNamed(context, '/pet', arguments: snapshot.data[index]);
           }
         );
       },

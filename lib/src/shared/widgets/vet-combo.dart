@@ -12,9 +12,18 @@ class VetCombo extends StatefulWidget {
   final String label;
   final Map<String, String> keyProperties;
   final dynamic onChange;
-  final int dependingValue;
+  final dynamic dependingValue;
+  final dynamic initValue;
 
-  VetCombo({this.icon, this.lookupType, this.label, this.keyProperties, this.onChange, this.dependingValue});
+  VetCombo({
+    this.icon,
+    this.lookupType,
+    this.label,
+    this.keyProperties,
+    this.onChange,
+    this.dependingValue,
+    this.initValue
+  });
 
   @override
   _VetComboState createState() => _VetComboState();
@@ -24,9 +33,11 @@ class _VetComboState extends State<VetCombo> {
   List<dynamic> _lookupService;
   var _selectValue;
 
+
   @override
   void initState() {
     _loadLookup();
+    _selectValue = widget.initValue;
     super.initState();
   }
 
@@ -68,6 +79,7 @@ class _VetComboState extends State<VetCombo> {
           decoration: InputDecoration(
             icon: widget.icon ?? null,
             labelText: widget.label,
+            errorText: state.hasError ? state.errorText : null,
             labelStyle: TextStyle(
               color: Colors.grey[700],
               fontSize: 18
@@ -75,6 +87,10 @@ class _VetComboState extends State<VetCombo> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(32.0),
               borderSide: BorderSide(color: Colors.grey[350]),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(32.0),
+              borderSide: BorderSide(color: Colors.red),
             ),
             contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0)
           ),
@@ -90,14 +106,20 @@ class _VetComboState extends State<VetCombo> {
               onChanged: (value) {
                 setState(() {
                   _selectValue = value;
-                  // state.didChange(value);
+                  state.didChange(value); // update FormField
                 });
                 widget.onChange(value);
               },
               value: _selectValue
             )
-          ) : CircularProgressIndicator()
+          ) : Container(
+            child: Text('Seleccionar'),
+            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0)
+          )
         );
+      },
+      validator: (value) {
+        return value == null ? 'Selecciona una opción' : null;
       }
     );
   }

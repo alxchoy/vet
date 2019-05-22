@@ -83,6 +83,7 @@ class ProfileForm extends StatefulWidget {
 
 class _ProfileFormState extends State<ProfileForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _autovalidate = false;
   String _userName;
   String _userDocumentNumber;
   String _userEmail;
@@ -114,6 +115,8 @@ class _ProfileFormState extends State<ProfileForm> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
+        } else {
+          setState(() => _autovalidate = true);
         }
       },
       padding: EdgeInsets.all(0.0),
@@ -123,7 +126,7 @@ class _ProfileFormState extends State<ProfileForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      autovalidate: true,
+      autovalidate: _autovalidate,
       key: _formKey,
       child: Container(
         child: Column(

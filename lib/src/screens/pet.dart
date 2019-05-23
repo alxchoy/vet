@@ -4,6 +4,7 @@ import '../providers/models/pet-model.dart';
 import '../shared/widgets/vet-input.dart';
 import '../shared/widgets/vet-combo.dart';
 import '../shared/widgets/vet-date.dart';
+import '../shared/widgets/vet-add-list.dart';
 
 class PetScreen extends StatefulWidget {
 
@@ -166,6 +167,7 @@ class _PetFormState extends State<PetForm> {
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
+              initValue: widget.pet.specieId,
               keyProperties: {
                 'keyValue': 'specieId',
                 'keyDescription': 'specieName'
@@ -176,8 +178,9 @@ class _PetFormState extends State<PetForm> {
             ),
             SizedBox(height: 20.0),
             VetCombo(
-              dependingValue: _specieId,
+              dependingValue: _specieId ?? widget.pet.specieId,
               icon: Icon(Icons.account_box, size: 50.0),
+              initValue: widget.pet.raceId,
               keyProperties: {
                 'keyValue': 'raceId',
                 'keyDescription': 'raceName'
@@ -201,6 +204,7 @@ class _PetFormState extends State<PetForm> {
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
+              initValue: widget.pet.petSizeId,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
@@ -210,10 +214,15 @@ class _PetFormState extends State<PetForm> {
               onChange: (val) => setState(() => _sizeId = val)
             ),
             SizedBox(height: 20.0),
-            VetInput(icon: Icon(Icons.account_box, size: 50.0), label: 'Peso'),
+            VetInput(
+              icon: Icon(Icons.account_box, size: 50.0),
+              initValue: widget.pet.petWeight.toStringAsFixed(2),
+              label: 'Peso'
+            ),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
+              initValue: widget.pet.habitadId,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
@@ -222,6 +231,13 @@ class _PetFormState extends State<PetForm> {
               lookupType: 'habitat',
               onChange: (val) => setState(() => _habitatId = val)
             ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0)),
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
+            ),
+            VetAddList(label: 'Alimentación'),
             SizedBox(height: 40.0),
             btnForm()
           ]

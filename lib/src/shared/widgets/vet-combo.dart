@@ -59,7 +59,7 @@ class _VetComboState extends State<VetCombo> {
 
       setState(() {
         _lookupService = lookupDecode;
-        _selectValue = null;
+        _selectValue = widget.initValue ?? null;
       });
     } else {
       lookup = await SharedPreferencesVet.getLookups();
@@ -85,11 +85,11 @@ class _VetComboState extends State<VetCombo> {
               fontSize: 18
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(32.0),
+              borderRadius: BorderRadius.circular(30.0),
               borderSide: BorderSide(color: Colors.grey[350]),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(32.0),
+              borderRadius: BorderRadius.circular(30.0),
               borderSide: BorderSide(color: Colors.red),
             ),
             contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0)

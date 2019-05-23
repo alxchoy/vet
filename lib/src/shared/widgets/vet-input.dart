@@ -27,11 +27,11 @@ class _VetInputState extends State<VetInput> {
           fontSize: 18
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
+          borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(color: Colors.grey[350]),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
+          borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(color: Colors.red),
         ),
         focusedBorder: OutlineInputBorder(

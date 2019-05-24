@@ -2,14 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../../providers/services/shared-preferences.dart';
 import './vet-list.dart';
+
+import '../../providers/services/shared-preferences.dart';
+import '../../providers/services/pet-service.dart';
+
 
 class VetAddList extends StatefulWidget {
   final String label;
   final String lookupType;
+  final int petId;
 
-  VetAddList({this.label, this.lookupType});
+  VetAddList({this.label, this.lookupType, this.petId});
 
   @override
   _VetAddListState createState() => _VetAddListState();
@@ -17,13 +21,17 @@ class VetAddList extends StatefulWidget {
 
 class _VetAddListState extends State<VetAddList> {
 
-  Future<List<dynamic>> _getList() async {
+  Future<List<dynamic>> _getListLookup() async {
     final lookups = await SharedPreferencesVet.getLookups();
     final lookupsDecode = json.decode(lookups);
 
-    print(lookupsDecode[widget.lookupType]);
-
     return lookupsDecode[widget.lookupType];
+  }
+
+  Future<List<dynamic>> _getListAlimentations() async {
+    final response = widget.petId != null ? await PetService.getAlimentationsByPet(widget.petId) : [];
+
+    return response;
   }
 
   Widget buttonInput() {
@@ -69,7 +77,7 @@ class _VetAddListState extends State<VetAddList> {
           SizedBox(height: 20.0),
           buttonInput(),
           FutureBuilder(
-            future: _getList(),
+            future: _getListAlimentations(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if(snapshot.hasData) {
                 return snapshot.data != null ? Text('Holis') : Text('Pending...');

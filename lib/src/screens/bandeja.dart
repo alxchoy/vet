@@ -12,9 +12,8 @@ class BandejaScreen extends StatefulWidget {
 class _BandejaScreenState extends State<BandejaScreen> {
 
   Future<dynamic> _getPetsList() async {
-    final token = await SharedPreferencesVet.getToken();
     final clientId = await SharedPreferencesVet.getClientId();
-    final pets = await PetService.getPetsList(token, clientId);
+    final pets = await PetService.getPetsList(clientId);
 
     return pets;
   }

@@ -157,7 +157,7 @@ class _ProfileFormState extends State<ProfileForm> {
             VetInput(label: 'Usuario', onSave: (val) => _userAlias = val, initValue: widget.clientData.userName),
             Container(
               child: Text('Contraseña', style: TextStyle(fontSize: 22.0)),
-              decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[300], width: 2.0))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[300], width: 1.0))),
               margin: EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
               padding: EdgeInsets.only(top: 20.0),
               width: double.infinity

@@ -241,7 +241,11 @@ class _PetFormState extends State<PetForm> {
               ),
               margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
             ),
-            VetAddList(label: 'Alimentación', lookupType: 'aliments'),
+            VetAddList(
+              label: 'Alimentación',
+              lookupType: 'aliments',
+              petId: widget.pet != null ? widget.pet.petId : null
+            ),
             SizedBox(height: 40.0),
             btnForm()
           ]

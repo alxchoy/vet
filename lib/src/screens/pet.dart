@@ -161,13 +161,17 @@ class _PetFormState extends State<PetForm> {
           children: <Widget>[
             Text('General', style: TextStyle(fontSize: 22.0)),
             SizedBox(height: 15.0),
-            VetInput(icon: Icon(Icons.account_box, size: 50.0), initValue: widget.pet.petName, label: 'Nombre'),
+            VetInput(
+              icon: Icon(Icons.account_box, size: 50.0),
+              initValue: widget.pet != null ? widget.pet.petName : '',
+              label: 'Nombre'
+            ),
             SizedBox(height: 20.0),
             VetDate(icon: Icon(Icons.account_box, size: 50.0), label: 'Fecha de nacimiento'),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
-              initValue: widget.pet.specieId,
+              initValue: widget.pet != null ? widget.pet.specieId : null,
               keyProperties: {
                 'keyValue': 'specieId',
                 'keyDescription': 'specieName'
@@ -178,9 +182,9 @@ class _PetFormState extends State<PetForm> {
             ),
             SizedBox(height: 20.0),
             VetCombo(
-              dependingValue: _specieId ?? widget.pet.specieId,
+              dependingValue: _specieId ?? (widget.pet != null ? widget.pet.specieId : null),
               icon: Icon(Icons.account_box, size: 50.0),
-              initValue: widget.pet.raceId,
+              initValue: widget.pet != null ? widget.pet.raceId : null,
               keyProperties: {
                 'keyValue': 'raceId',
                 'keyDescription': 'raceName'
@@ -192,7 +196,7 @@ class _PetFormState extends State<PetForm> {
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
-              initValue: widget.pet.sexId,
+              initValue: widget.pet != null ? widget.pet.sexId : null,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
@@ -204,7 +208,7 @@ class _PetFormState extends State<PetForm> {
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
-              initValue: widget.pet.petSizeId,
+              initValue: widget.pet != null ? widget.pet.petSizeId : null,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
@@ -216,13 +220,13 @@ class _PetFormState extends State<PetForm> {
             SizedBox(height: 20.0),
             VetInput(
               icon: Icon(Icons.account_box, size: 50.0),
-              initValue: widget.pet.petWeight.toStringAsFixed(2),
+              initValue: widget.pet != null ? widget.pet.petWeight.toStringAsFixed(2) : null,
               label: 'Peso'
             ),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(Icons.account_box, size: 50.0),
-              initValue: widget.pet.habitadId,
+              initValue: widget.pet != null ? widget.pet.habitadId : null,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
@@ -237,7 +241,7 @@ class _PetFormState extends State<PetForm> {
               ),
               margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
             ),
-            VetAddList(label: 'Alimentación'),
+            VetAddList(label: 'Alimentación', lookupType: 'aliments'),
             SizedBox(height: 40.0),
             btnForm()
           ]

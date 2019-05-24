@@ -34,7 +34,9 @@ class _BandejaScreenState extends State<BandejaScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, '/pet');
+      },
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))
     );

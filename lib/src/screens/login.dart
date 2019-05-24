@@ -120,7 +120,6 @@ class _LoginFormState extends State<LoginForm> {
 
       SharedPreferencesVet.setToken(data['access_token']);
       SharedPreferencesVet.setClientId(dataClient['idLogIn']);
-      Navigator.pushNamed(context, '/navigation');
     } else {
       widget.callback(false);
       print(response.statusCode);
@@ -133,6 +132,7 @@ class _LoginFormState extends State<LoginForm> {
     final lookups = await LookupsService.loadLookups();
     SharedPreferencesVet.setLookups(json.encode(lookups));
     widget.callback(false);
+    Navigator.pushNamed(context, '/navigation');
   }
 
   @override

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/pet-model.dart';
+import '../models/food-pet-client-model.dart';
 import '../../shared/constants.dart';
 import './shared-preferences.dart';
 
@@ -30,7 +31,7 @@ class PetService {
     }
   }
 
-  static Future<dynamic> getAlimentationsByPet(int petId) async {
+  static Future<List<FoodPetClient>> getAlimentationsByPet(int petId) async {
     final token = await SharedPreferencesVet.getToken();
     final response = await http.get("${constants['urlApi']}/pet/getAlimentationByPet?PetId=$petId&AlimentationName",
       headers: {
@@ -40,7 +41,31 @@ class PetService {
 
     if (response.statusCode == 200) {
       final responseDecode = json.decode(response.body);
-      return responseDecode;
+      List<FoodPetClient> foods = new List<FoodPetClient>();
+
+      for (var food in responseDecode) {
+        foods.add(FoodPetClient.fromJson(food));
+      }
+
+      return foods;
+    } else {
+      throw Exception('Falló el servicio getAlimentationsByPet');
+    }
+  }
+
+  static Future<dynamic> deleteAlimentation(int alimentationId) async {
+    var wasRemoved = false;
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.get("${constants['urlApi']}/pet/deleteAlimentation/$alimentationId",
+      headers: {
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      // final responseDecode = json.decode(response.body);
+      wasRemoved = true;
+      return wasRemoved;
     } else {
       throw Exception('Falló el servicio getAlimentationsByPet');
     }

@@ -6,6 +6,7 @@ import './vet-list.dart';
 
 import '../../providers/services/shared-preferences.dart';
 import '../../providers/services/pet-service.dart';
+import '../../providers/models/food-pet-client-model.dart';
 
 
 class VetAddList extends StatefulWidget {
@@ -20,6 +21,13 @@ class VetAddList extends StatefulWidget {
 }
 
 class _VetAddListState extends State<VetAddList> {
+  List<FoodPetClient> _alimentsByPet;
+
+  @override
+  void initState() {
+    super.initState();
+    _setListAlimentations();
+  }
 
   Future<List<dynamic>> _getListLookup() async {
     final lookups = await SharedPreferencesVet.getLookups();
@@ -28,10 +36,26 @@ class _VetAddListState extends State<VetAddList> {
     return lookupsDecode[widget.lookupType];
   }
 
-  Future<List<dynamic>> _getListAlimentations() async {
+  Future<void> _setListAlimentations() async {
     final response = widget.petId != null ? await PetService.getAlimentationsByPet(widget.petId) : [];
+    List<FoodPetClient> _aliments = [];
 
-    return response;
+    for (var item in response) {
+      _aliments.add(item);
+    }
+
+    setState(() {
+      _alimentsByPet = _aliments;
+    });
+  }
+
+  Future<void> _deleteFood(petAlimentationId) async {
+    final bool response = await PetService.deleteAlimentation(petAlimentationId);
+    if (response) {
+      setState(() {
+        _alimentsByPet.removeWhere((item) => item.petAlimentationId == petAlimentationId);
+      });
+    }
   }
 
   Widget buttonInput() {
@@ -64,9 +88,33 @@ class _VetAddListState extends State<VetAddList> {
     );
   }
 
-  // Widget _createListView() {
-  //   return ListView.builder();
-  // }
+  Widget rowFood({FoodPetClient food}) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text('${food.alimentationName}', style: TextStyle(fontSize: 18.0)),
+          GestureDetector(
+            child: Icon(Icons.delete, color: Colors.red, size: 25.0),
+            onTap: () => _deleteFood(food.petAlimentationId)
+          )
+        ]
+      ),
+      padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)
+    );
+  }
+
+  Widget _createFoodList(list) {
+    List<Widget> _listWidget = [];
+
+    for (var item in list) {
+      _listWidget.add(rowFood(food: item));
+    }
+
+    return Column(
+      children: _listWidget
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,15 +124,8 @@ class _VetAddListState extends State<VetAddList> {
           Text(widget.label, style: TextStyle(fontSize: 22.0)),
           SizedBox(height: 20.0),
           buttonInput(),
-          FutureBuilder(
-            future: _getListAlimentations(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(snapshot.hasData) {
-                return snapshot.data != null ? Text('Holis') : Text('Pending...');
-              } else {
-                return Text('Error');
-              }
-            }
+          Container(
+            child: _alimentsByPet != null ? _createFoodList(_alimentsByPet) : Center(child: CircularProgressIndicator())
           )
         ],
         crossAxisAlignment: CrossAxisAlignment.start

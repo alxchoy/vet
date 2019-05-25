@@ -184,14 +184,14 @@ class _PetFormState extends State<PetForm> {
             VetCombo(
               dependingValue: _specieId ?? (widget.pet != null ? widget.pet.specieId : null),
               icon: Icon(Icons.account_box, size: 50.0),
-              initValue: widget.pet != null ? widget.pet.raceId : null,
+              initValue: _specieId != null ? null : (widget.pet != null ? widget.pet.raceId : null),
               keyProperties: {
                 'keyValue': 'raceId',
                 'keyDescription': 'raceName'
               },
               label: 'Raza',
               lookupType: 'races',
-              onChange: (val) => setState(() => _raceId = val)
+              onChange: (val) => _raceId = val
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -203,7 +203,7 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Sexo',
               lookupType: 'sex',
-              onChange: (val) => setState(() => _sexId = val)
+              onChange: (val) => _sexId = val
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -215,7 +215,7 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Tamaño',
               lookupType: 'size',
-              onChange: (val) => setState(() => _sizeId = val)
+              onChange: (val) => _sizeId = val
             ),
             SizedBox(height: 20.0),
             VetInput(
@@ -233,7 +233,7 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Habitat',
               lookupType: 'habitat',
-              onChange: (val) => setState(() => _habitatId = val)
+              onChange: (val) => _habitatId = val
             ),
             Container(
               decoration: BoxDecoration(

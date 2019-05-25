@@ -10,8 +10,15 @@ class BandejaScreen extends StatefulWidget {
 }
 
 class _BandejaScreenState extends State<BandejaScreen> {
+  Future<List<Pet>> _pets;
 
-  Future<dynamic> _getPetsList() async {
+  @override
+  void initState() {
+    super.initState();
+    _pets = _getPetsList();
+  }
+
+  Future<List<Pet>> _getPetsList() async {
     final clientId = await SharedPreferencesVet.getClientId();
     final pets = await PetService.getPetsList(clientId);
 
@@ -72,7 +79,7 @@ class _BandejaScreenState extends State<BandejaScreen> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: _getPetsList(),
+              future: _pets,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if(snapshot.hasData) {
                   return snapshot.data != null ? _createPetsGridView(context, snapshot) : Text('Pending...');

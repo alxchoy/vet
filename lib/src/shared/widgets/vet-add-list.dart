@@ -2,63 +2,109 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import './vet-list.dart';
+import './vet-search-list.dart';
 
 import '../../providers/services/shared-preferences.dart';
 import '../../providers/services/pet-service.dart';
-import '../../providers/models/food-pet-client-model.dart';
 
 
 class VetAddList extends StatefulWidget {
   final String label;
   final String lookupType;
   final int petId;
+  final dynamic getSymptoms;
 
-  VetAddList({this.label, this.lookupType, this.petId});
+  VetAddList({this.label, this.lookupType, this.petId, this.getSymptoms});
 
   @override
   _VetAddListState createState() => _VetAddListState();
 }
 
 class _VetAddListState extends State<VetAddList> {
-  List<FoodPetClient> _alimentsByPet;
+  List<dynamic> _listRow;
+  List<dynamic> _listSymptoms = [];
+  List<dynamic> _lookupCurrentList;
+  bool _loading;
 
   @override
   void initState() {
     super.initState();
-    _setListAlimentations();
+    _loading = false;
+    _setListRow();
+    _getListLookup();
   }
 
-  Future<List<dynamic>> _getListLookup() async {
+  Future<void> _getListLookup() async {
     final lookups = await SharedPreferencesVet.getLookups();
     final lookupsDecode = json.decode(lookups);
-
-    return lookupsDecode[widget.lookupType];
+    _lookupCurrentList = lookupsDecode[widget.lookupType];
   }
 
-  Future<void> _setListAlimentations() async {
-    final response = widget.petId != null ? await PetService.getAlimentationsByPet(widget.petId) : [];
-    List<FoodPetClient> _aliments = [];
+  Future<void> _setListRow() async {
+    setState(() => _loading = true);
+    var response;
 
-    for (var item in response) {
-      _aliments.add(item);
+    if (widget.lookupType == 'aliments' && widget.petId != null) {
+      response = await PetService.getAlimentationsByPet(widget.petId);
+    } else if (widget.lookupType == 'vaccines' && widget.petId != null) {
+      response = await PetService.getVaccinesByPet(widget.petId);
+    } else if (widget.lookupType == 'symptoms') {
+      widget.getSymptoms(_listSymptoms);
+      response = _listSymptoms;
+    } else {
+      response = [];
     }
 
     setState(() {
-      _alimentsByPet = _aliments;
+      _listRow = response;
+      _loading = false;
     });
   }
 
-  Future<void> _deleteFood(petAlimentationId) async {
-    final bool response = await PetService.deleteAlimentation(petAlimentationId);
-    if (response) {
-      setState(() {
-        _alimentsByPet.removeWhere((item) => item.petAlimentationId == petAlimentationId);
-      });
+  Future<void> _deleteRow(item) async {
+    if (widget.lookupType == 'aliments') {
+      await PetService.deleteAlimentation(item['petAlimentationId']);
+    } else if (widget.lookupType == 'vaccines') {
+      await PetService.deleteVaccine(item['petVaccineId']);
+    } else if (widget.lookupType == 'symptoms') {
+      _listSymptoms.removeWhere((sympton) => sympton['symptomId'] == item['symptomId']);
+    }
+
+    await _setListRow();
+  }
+
+  Future<void> _getSelectedItem() async {
+    var propertyName;
+    if (widget.lookupType == 'aliments') {
+      propertyName = 'alimentationName';
+    } else if (widget.lookupType == 'vaccines') {
+      propertyName = 'alimentationName';
+    } else if (widget.lookupType == 'symptoms') {
+      propertyName = 'symptomDescription';
+    }
+
+    final item = await showSearch(
+      context: context,
+      delegate: VetListSearch(
+        list: _lookupCurrentList,
+        propertyName: propertyName
+      )
+    );
+
+    if (widget.lookupType == 'aliments' && item != null) {
+      await PetService.addAlimentation(widget.petId, item['alimentationId']);
+    } else if (widget.lookupType == 'vaccines' && item != null) {
+      await PetService.addVaccine(widget.petId, item['vaccineId']);
+    } else if (widget.lookupType == 'symptoms' && item != null) {
+      _listSymptoms.add(item);
+    }
+
+    if (item != null) {
+      await _setListRow();
     }
   }
 
-  Widget buttonInput() {
+  Widget selectButton(BuildContext context) {
     return InputDecorator(
       decoration: InputDecoration(
         labelText: widget.label,
@@ -81,26 +127,40 @@ class _VetAddListState extends State<VetAddList> {
           ]
         ),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => VetList()));
+          _getSelectedItem();
         },
-        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0)
       )
     );
   }
 
-  Widget rowFood({FoodPetClient food}) {
+  Widget _rowItem({item}) {
+    var propertyName;
+    if (widget.lookupType == 'aliments') {
+      propertyName = 'alimentationName';
+    } else if (widget.lookupType == 'vaccines') {
+      propertyName = 'alimentationName';
+    } else if (widget.lookupType == 'symptoms') {
+      propertyName = 'symptomDescription';
+    }
+
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('${food.alimentationName}', style: TextStyle(fontSize: 18.0)),
+          Container(
+            child: Text("${item[propertyName]}", style: TextStyle(fontSize: 18.0), overflow: TextOverflow.ellipsis),
+            width: 280.0,
+          ),
           GestureDetector(
-            child: Icon(Icons.delete, color: Colors.red, size: 25.0),
-            onTap: () => _deleteFood(food.petAlimentationId)
+            child: Icon(Icons.delete, color: Color.fromRGBO(202, 57, 48, 1.0), size: 35.0),
+            onTap: () {
+              _deleteRow(item);
+            }
           )
         ]
       ),
-      padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0)
     );
   }
 
@@ -108,7 +168,7 @@ class _VetAddListState extends State<VetAddList> {
     List<Widget> _listWidget = [];
 
     for (var item in list) {
-      _listWidget.add(rowFood(food: item));
+      _listWidget.add(_rowItem(item: item));
     }
 
     return Column(
@@ -123,9 +183,16 @@ class _VetAddListState extends State<VetAddList> {
         children: <Widget>[
           Text(widget.label, style: TextStyle(fontSize: 22.0)),
           SizedBox(height: 20.0),
-          buttonInput(),
+          selectButton(context),
           Container(
-            child: _alimentsByPet != null ? _createFoodList(_alimentsByPet) : Center(child: CircularProgressIndicator())
+            child: _loading == false ? _createFoodList(_listRow) : Container(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.grey[350],
+                valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
+              ),
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 20.0)
+            )
           )
         ],
         crossAxisAlignment: CrossAxisAlignment.start

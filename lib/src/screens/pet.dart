@@ -5,6 +5,11 @@ import '../shared/widgets/vet-input.dart';
 import '../shared/widgets/vet-combo.dart';
 import '../shared/widgets/vet-date.dart';
 import '../shared/widgets/vet-add-list.dart';
+import '../shared/widgets/vet-header.dart';
+import '../shared/widgets/vet-button.dart';
+
+import './vaccines.dart';
+import './report.dart';
 
 class PetScreen extends StatefulWidget {
 
@@ -13,71 +18,6 @@ class PetScreen extends StatefulWidget {
 }
 
 class _PetScreenState extends State<PetScreen> {
-  Widget petHeaderDetail({String lblTitle, String lblDetail}) {
-    return Column(
-      children: <Widget>[
-        Text(lblTitle, style: TextStyle(fontSize: 15)),
-        SizedBox(height: 3.0),
-        Text(lblDetail, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 22))
-      ],
-      crossAxisAlignment: CrossAxisAlignment.start
-    );
-  }
-
-  Widget petHeader() {
-    double widthScreen = MediaQuery.of(context).size.width - 40;
-
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              // image: DecorationImage(
-              //   fit: BoxFit.cover,
-              //   image: NetworkImage()
-              // ),
-              color: Colors.green,
-              shape: BoxShape.circle,
-            ),
-            height: 150.0,
-            margin: EdgeInsets.only(bottom: 30.0),
-            width: 150.0,
-          ),
-          Row(
-            children: <Widget>[
-              Container(
-                child: petHeaderDetail(lblTitle: 'Nombre', lblDetail: 'Peluchin'),
-                decoration: BoxDecoration(
-                  border: Border(right: BorderSide(color: Colors.grey[300], width: 1.0))
-                ),
-                padding: EdgeInsets.only(right: 20.0),
-                width: widthScreen / 3
-              ),
-              Container(
-                child: petHeaderDetail(lblTitle: 'Edad', lblDetail: '3 años'),
-                decoration: BoxDecoration(
-                  border: Border(right: BorderSide(color: Colors.grey[300], width: 1.0))
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-                width: widthScreen / 3
-              ),
-              Container(
-                child: petHeaderDetail(lblTitle: 'Raza', lblDetail: 'Perro peruano'),
-                padding: EdgeInsets.only(left: 20.0),
-                width: widthScreen / 3
-              )
-            ]
-          )
-        ]
-      ),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
-      ),
-      padding: EdgeInsets.only(bottom: 15.0),
-      margin: EdgeInsets.only(bottom: 30.0)
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final Pet pet = ModalRoute.of(context).settings.arguments;
@@ -90,7 +30,7 @@ class _PetScreenState extends State<PetScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              petHeader(),
+              VetHeader(pet: pet),
               PetForm(pet: pet)
             ]
           ),
@@ -118,37 +58,6 @@ class _PetFormState extends State<PetForm> {
   var _sexId;
   var _sizeId;
   var _habitatId;
-
-  FlatButton btnForm() {
-    return FlatButton(
-      child: Container(
-        child: Center(
-          child: Text(
-            'Guardar'.toUpperCase(),
-            style: TextStyle(fontSize: 24, color: Colors.white),
-          )
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50.0),
-          boxShadow: <BoxShadow>[
-            BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.5), blurRadius: 5.0)
-          ],
-          color: Color.fromRGBO(90, 168, 158, 1.0)
-        ),
-        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0),
-        width: double.infinity,
-      ),
-      color: Color.fromRGBO(0, 0, 0, 0.0),
-      onPressed: () {
-        if (_formKey.currentState.validate()) {
-          _formKey.currentState.save();
-        } else {
-          setState(() => _autovalidate = true);
-        }
-      },
-      padding: EdgeInsets.all(0.0),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,8 +155,57 @@ class _PetFormState extends State<PetForm> {
               lookupType: 'aliments',
               petId: widget.pet != null ? widget.pet.petId : null
             ),
-            SizedBox(height: 40.0),
-            btnForm()
+            Container(
+              child: Text('Vacunas', style: TextStyle(fontSize: 22.0)),
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.grey[300], width: 1.0)),
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
+              padding: EdgeInsets.only(top: 20.0),
+              width: double.infinity
+            ),
+            VetButton(
+              color: Color.fromRGBO(90, 168, 158, 1.0),
+              text: 'Ver todas las vacunas',
+              textSize: 20.0,
+              onPress: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => VaccinesScreen(pet: widget.pet))
+                );
+              }
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0)),
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
+            ),
+            SizedBox(height: 20.0),
+            VetButton(
+              color: Color.fromRGBO(202, 57, 48, 1.0),
+              text: 'Reportar enfermedad',
+              textSize: 24.0,
+              onPress: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReportScreen(pet: widget.pet))
+                );
+              }
+            ),
+            SizedBox(height: 20.0),
+            VetButton(
+              color: Color.fromRGBO(90, 168, 158, 1.0),
+              text: 'Guardar',
+              textSize: 24.0,
+              onPress: () {
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                } else {
+                  setState(() => _autovalidate = true);
+                }
+              }
+            )
           ]
         )
       )

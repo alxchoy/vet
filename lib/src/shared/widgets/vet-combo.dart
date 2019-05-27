@@ -96,6 +96,7 @@ class _VetComboState extends State<VetCombo> {
           ),
           child: _lookupService != null ? DropdownButtonHideUnderline(
             child: DropdownButton(
+              style: TextStyle(color: Colors.grey[900], fontSize: 18.0),
               hint: Text('Seleccionar'),
               items: _lookupService.map((val) {
                 return DropdownMenuItem(

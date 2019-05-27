@@ -44,6 +44,7 @@ class _VetInputState extends State<VetInput> {
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0)
       ),
+      style: TextStyle(fontSize: 18.0),
       initialValue: widget.initValue,
       obscureText: widget.inputType == 'password',
       onSaved: widget.onSave,

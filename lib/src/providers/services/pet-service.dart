@@ -31,7 +31,7 @@ class PetService {
     }
   }
 
-  static Future<List<FoodPetClient>> getAlimentationsByPet(int petId) async {
+  static Future<List<dynamic>> getAlimentationsByPet(int petId) async {
     final token = await SharedPreferencesVet.getToken();
     final response = await http.get("${constants['urlApi']}/pet/getAlimentationByPet?PetId=$petId&AlimentationName",
       headers: {
@@ -41,13 +41,8 @@ class PetService {
 
     if (response.statusCode == 200) {
       final responseDecode = json.decode(response.body);
-      List<FoodPetClient> foods = new List<FoodPetClient>();
 
-      for (var food in responseDecode) {
-        foods.add(FoodPetClient.fromJson(food));
-      }
-
-      return foods;
+      return responseDecode;
     } else {
       throw Exception('Falló el servicio getAlimentationsByPet');
     }
@@ -63,9 +58,106 @@ class PetService {
     );
 
     if (response.statusCode == 200) {
-      // final responseDecode = json.decode(response.body);
       wasRemoved = true;
       return wasRemoved;
+    } else {
+      throw Exception('Falló el servicio getAlimentationsByPet');
+    }
+  }
+
+  static Future<dynamic> addAlimentation(petId, alimentationId) async {
+    final bodyRequest = {
+      'alimentationId': alimentationId,
+      'petId': petId
+    };
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.post("${constants['urlApi']}/pet/addAlimentation",
+      body: json.encode(bodyRequest),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'content-type': 'application/json'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+
+      return responseDecode;
+    } else {
+      throw Exception('Falló el servicio getAlimentationsByPet');
+    }
+  }
+
+  static Future<List<dynamic>> getVaccinesByPet(int petId) async {
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.get("${constants['urlApi']}/pet/getVaccinesByPet?PetId=$petId&VaccinesName",
+      headers: {
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+
+      return responseDecode;
+    } else {
+      throw Exception('Falló el servicio getAlimentationsByPet');
+    }
+  }
+
+  static Future<dynamic> deleteVaccine(int vaccineId) async {
+    var wasRemoved = false;
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.get("${constants['urlApi']}/pet/deleteVaccine/$vaccineId",
+      headers: {
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      wasRemoved = true;
+      return wasRemoved;
+    } else {
+      throw Exception('Falló el servicio getAlimentationsByPet');
+    }
+  }
+
+  static Future<dynamic> addVaccine(petId, vaccineId) async {
+    final bodyRequest = {
+      'vaccineId': vaccineId,
+      'petId': petId
+    };
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.post("${constants['urlApi']}/pet/addVaccine",
+      body: json.encode(bodyRequest),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'content-type': 'application/json'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+
+      return responseDecode;
+    } else {
+      throw Exception('Falló el servicio getAlimentationsByPet');
+    }
+  }
+
+  static Future<dynamic> reportPet(int petId, List<dynamic> symptomsIds) async {
+    final listIds = symptomsIds.join(',');
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.get("${constants['urlApi']}/pet/GetDiagnostic?PetId=$petId&symptomIds=$listIds",
+      headers: {
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+
+      return responseDecode;
     } else {
       throw Exception('Falló el servicio getAlimentationsByPet');
     }

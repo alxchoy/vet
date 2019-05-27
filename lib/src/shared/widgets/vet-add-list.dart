@@ -6,6 +6,7 @@ import './vet-search-list.dart';
 
 import '../../providers/services/shared-preferences.dart';
 import '../../providers/services/pet-service.dart';
+import '../vet_app_icons.dart';
 
 
 class VetAddList extends StatefulWidget {
@@ -153,7 +154,7 @@ class _VetAddListState extends State<VetAddList> {
             width: 280.0,
           ),
           GestureDetector(
-            child: Icon(Icons.delete, color: Color.fromRGBO(202, 57, 48, 1.0), size: 35.0),
+            child: Icon(VetAppIcons.trash, color: Color.fromRGBO(202, 57, 48, 1.0), size: 35.0),
             onTap: () {
               _deleteRow(item);
             }

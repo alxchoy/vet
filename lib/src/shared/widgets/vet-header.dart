@@ -33,10 +33,10 @@ class _VetHeaderState extends State<VetHeader> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              // image: DecorationImage(
-              //   fit: BoxFit.cover,
-              //   image: NetworkImage()
-              // ),
+              image: DecorationImage(
+                image: NetworkImage(widget.pet.petPathImage),
+                fit: BoxFit.cover
+              ),
               color: Colors.green,
               shape: BoxShape.circle,
             ),

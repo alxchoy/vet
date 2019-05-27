@@ -4,6 +4,8 @@ import './bandeja.dart';
 import './profile.dart';
 import './subscription.dart';
 
+import '../shared/vet_app_icons.dart';
+
 class NavigationScreen extends StatefulWidget {
   @override
   _NavigationScreenState createState() => _NavigationScreenState();
@@ -34,7 +36,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         currentIndex: _currentScreen,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(VetAppIcons.huella),
             title: Text('Mis mascotas')
           ),
           BottomNavigationBarItem(
@@ -42,7 +44,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             title: Text('Mi perfil')
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
+            icon: Icon(VetAppIcons.start),
             title: Text('Subscripción')
           )
         ],

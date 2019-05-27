@@ -110,11 +110,6 @@ class _CardPetState extends State<CardPet> {
   @override
   void initState() {
     super.initState();
-    // Image.network(widget.pet.petPathImage).image.resolve(ImageConfiguration()).addListener((a, b) {
-    //   if (mounted) {
-    //     setState(() => _loadImage = true);
-    //   }
-    // });
   }
 
   @override
@@ -122,11 +117,14 @@ class _CardPetState extends State<CardPet> {
     return Container(
       child: Stack(
         children: <Widget>[
-          // _loadImage ? Image.network(widget.pet.petPathImage) : AssetImage('assets/img/background.png'),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: Colors.lightBlue
+              color: Colors.lightBlue,
+              image: DecorationImage(
+                image: NetworkImage(widget.pet.petPathImage),
+                fit: BoxFit.cover
+              )
             )
           ),
           Padding(
@@ -139,8 +137,7 @@ class _CardPetState extends State<CardPet> {
                 Text(
                   "${widget.pet.petAge} ${widget.pet.petAge != 1 ? 'años' : 'año'}",
                   style: TextStyle(color: Colors.white, fontSize: 18)
-                ),
-                Text('${widget.pet.petPathImage}')
+                )
               ],
               crossAxisAlignment: CrossAxisAlignment.start,
             ),

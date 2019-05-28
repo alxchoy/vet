@@ -39,8 +39,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
     if (listIds.isNotEmpty) {
       final response = await PetService.reportPet(widget.pet.petId, listIds);
-      print(response);
       setState(() => _isLoading = false);
+      await Navigator.pushNamed(context, '/result', arguments: response);
     }
   }
 

@@ -165,7 +165,7 @@ class _VetAddListState extends State<VetAddList> {
     );
   }
 
-  Widget _createFoodList(list) {
+  Widget _createList(list) {
     List<Widget> _listWidget = [];
 
     for (var item in list) {
@@ -186,7 +186,7 @@ class _VetAddListState extends State<VetAddList> {
           SizedBox(height: 20.0),
           selectButton(context),
           Container(
-            child: _loading == false ? _createFoodList(_listRow) : Container(
+            child: _loading == false ? _createList(_listRow) : Container(
               child: CircularProgressIndicator(
                 backgroundColor: Colors.grey[350],
                 valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),

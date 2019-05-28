@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/pet-model.dart';
-import '../models/food-pet-client-model.dart';
+import '../models/disease-model.dart';
+import '../models/provider-model.dart';
 import '../../shared/constants.dart';
 import './shared-preferences.dart';
 
@@ -156,8 +157,23 @@ class PetService {
 
     if (response.statusCode == 200) {
       final responseDecode = json.decode(response.body);
+      List<Disease> diseases = List<Disease>();
+      List<Provider> providers = List<Provider>();
 
-      return responseDecode;
+      for (var disease in responseDecode['diseases']) {
+        diseases.add(Disease.fromJson(disease));
+      }
+
+      for (var provider in responseDecode['providers']) {
+        providers.add(Provider.fromJson(provider));
+      }
+
+      final data = {
+        'diseases': diseases,
+        'providers': providers
+      };
+
+      return data;
     } else {
       throw Exception('Falló el servicio getAlimentationsByPet');
     }

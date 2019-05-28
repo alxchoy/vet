@@ -2,12 +2,12 @@ class Provider {
   final String headquaterDescription;
   final String headquaterEmail;
   final int headquaterId;
-  final int headquaterPhone;
+  final String headquaterPhone;
   final String headqueaterAddress;
-  final int latitud;
-  final int longitud;
+  final String latitud;
+  final String longitud;
   final String pathImage;
-  final int providerDocumentNumber;
+  final String providerDocumentNumber;
   final String providerDocumentType;
   final int providerId;
   final String providerName;

@@ -88,54 +88,60 @@ class ProvidersList extends StatelessWidget {
     return Container(
       child: Row(
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              // image: DecorationImage(
-              //   image: NetworkImage(provider.pathImage),
-              //   fit: BoxFit.cover
-              // ),
-              color: Colors.green,
-              shape: BoxShape.circle,
-            ),
-            height: 70.0,
-            margin: EdgeInsets.only(right: 15.0),
-            width: 70.0
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                child: Text(provider.providerName, style: TextStyle(fontSize: 18.0), overflow: TextOverflow.ellipsis),
-                width: 200.0,
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                // image: DecorationImage(
+                //   image: NetworkImage(provider.pathImage),
+                //   fit: BoxFit.cover
+                // ),
+                color: Colors.green,
+                shape: BoxShape.circle,
               ),
-              SizedBox(height: 5.0),
-              Container(
-                child: Row(
+              height: 70.0,
+              margin: EdgeInsets.only(right: 15.0)
+            ),
+            flex: 1
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Flexible(
+                  child: Text(provider.providerName, style: TextStyle(fontSize: 18.0), overflow: TextOverflow.ellipsis),
+                ),
+                SizedBox(height: 5.0),
+                Row(
                   children: <Widget>[
-                    Text('Dirección', style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(width: 20.0),
-                    Container(
-                      child: Text(provider.headqueaterAddress, overflow: TextOverflow.ellipsis),
-                      width: 120.0,
+                    Expanded(
+                      child: Text('Dirección', style: TextStyle(fontWeight: FontWeight.bold)),
+                      flex: 3
+                    ),
+                    Expanded(
+                      child:Text(provider.headqueaterAddress, overflow: TextOverflow.ellipsis),
+                      flex: 3
                     )
                   ]
                 ),
-                // width: 250.0,
-              ),
-              SizedBox(height: 3.0),
-              Container(
-                child: Row(
+                SizedBox(height: 3.0),
+                Row(
                   children: <Widget>[
-                    Text('Teléfono', style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(width: 24.0),
-                    Text(provider.headquaterPhone, overflow: TextOverflow.ellipsis)
+                    Expanded(
+                      child: Text('Teléfono', style: TextStyle(fontWeight: FontWeight.bold)),
+                      flex: 3
+                    ),
+                    Expanded(
+                      child: Text(provider.headquaterPhone, overflow: TextOverflow.ellipsis),
+                      flex: 3
+                    )
                   ]
                 ),
-                width: 200.0,
-              ),
-            ]
+              ]
+            ),
+            flex: 2
           )
+
         ]
       ),
       decoration: BoxDecoration(
@@ -153,8 +159,11 @@ class ProvidersList extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _providerDetail(provider: provider),
-          Flexible(
+          Expanded(
+            child: _providerDetail(provider: provider),
+            flex: 4,
+          ),
+          Expanded(
             child: GestureDetector(
               child: Container(
                 child: Text(
@@ -167,8 +176,24 @@ class ProvidersList extends StatelessWidget {
               onTap: () {
                 print('tab detalle');
               }
-            )
+            ),
+            flex: 1
           )
+          // Flexible(
+          //   child: GestureDetector(
+          //     child: Container(
+          //       child: Text(
+          //         'Ver detalle',
+          //         style: TextStyle(fontSize: 18.0, color: Color.fromRGBO(90, 168, 158, 1.0)),
+          //         textAlign: TextAlign.center
+          //       ),
+          //       padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0)
+          //     ),
+          //     onTap: () {
+          //       print('tab detalle');
+          //     }
+          //   )
+          // )
         ]
       ),
       padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 15.0)

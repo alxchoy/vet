@@ -179,21 +179,6 @@ class ProvidersList extends StatelessWidget {
             ),
             flex: 1
           )
-          // Flexible(
-          //   child: GestureDetector(
-          //     child: Container(
-          //       child: Text(
-          //         'Ver detalle',
-          //         style: TextStyle(fontSize: 18.0, color: Color.fromRGBO(90, 168, 158, 1.0)),
-          //         textAlign: TextAlign.center
-          //       ),
-          //       padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0)
-          //     ),
-          //     onTap: () {
-          //       print('tab detalle');
-          //     }
-          //   )
-          // )
         ]
       ),
       padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 15.0)

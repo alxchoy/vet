@@ -82,9 +82,16 @@ class _BandejaScreenState extends State<BandejaScreen> {
               future: _pets,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if(snapshot.hasData) {
-                  return snapshot.data != null ? _createPetsGridView(context, snapshot) : Text('Pending...');
+                  return snapshot.data != null ? _createPetsGridView(context, snapshot) : Text('Error...');
                 } else {
-                  return Text('Error');
+                  return Container(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey[350],
+                      valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
+                    ),
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(top: 20.0)
+                  );
                 }
               }
             )

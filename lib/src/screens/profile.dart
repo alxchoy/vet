@@ -21,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return data;
   }
 
-  Widget header() {
+  Widget header({String name}) {
     return Row(
       children: <Widget>[
         Container(
@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Column(
           children: <Widget>[
             Text('Hola,', style: TextStyle(fontSize: 20)),
-            Text('Name', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25))
+            Text(name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25))
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         )
@@ -50,22 +50,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        child: Column(
-          children: <Widget>[
-            header(),
-            SizedBox(height: 40.0),
-            FutureBuilder(
-              future: _getClientData(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(snapshot.hasData) {
-                  return snapshot.data != null ? ProfileForm(clientData: snapshot.data) : Text('Pending...');
-                } else {
-                  return Text('Error');
-                }
-              },
-            )
-          ],
+        child: FutureBuilder(
+          future: _getClientData(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if(snapshot.hasData) {
+              final Client data = snapshot.data;
+
+              return snapshot.data != null ? Column(
+                children: <Widget>[
+                  header(name: data.clientFullName),
+                  SizedBox(height: 40.0),
+                  ProfileForm(clientData: snapshot.data)
+                ]
+              ) : Text('Error...');
+            } else {
+              return Container(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.grey[350],
+                  valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
+                ),
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 200.0)
+              );
+            }
+          },
         ),
+        // child: Column(
+        //   children: <Widget>[
+        //     header(),
+        //     SizedBox(height: 40.0),
+        //     FutureBuilder(
+        //       future: _getClientData(),
+        //       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        //         if(snapshot.hasData) {
+        //           return snapshot.data != null ? ProfileForm(clientData: snapshot.data) : Text('Error...');
+        //         } else {
+        //           return Container(
+        //             child: CircularProgressIndicator(
+        //               backgroundColor: Colors.grey[350],
+        //               valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
+        //             ),
+        //             alignment: Alignment.center,
+        //             margin: EdgeInsets.only(top: 20.0)
+        //           );
+        //         }
+        //       },
+        //     )
+        //   ],
+        // ),
         padding: EdgeInsets.all(20.0)
       )
     );

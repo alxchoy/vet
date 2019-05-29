@@ -79,7 +79,7 @@ class _VetAddListState extends State<VetAddList> {
     if (widget.lookupType == 'aliments') {
       propertyName = 'alimentationName';
     } else if (widget.lookupType == 'vaccines') {
-      propertyName = 'alimentationName';
+      propertyName = 'vaccineName';
     } else if (widget.lookupType == 'symptoms') {
       propertyName = 'symptomDescription';
     }
@@ -140,7 +140,7 @@ class _VetAddListState extends State<VetAddList> {
     if (widget.lookupType == 'aliments') {
       propertyName = 'alimentationName';
     } else if (widget.lookupType == 'vaccines') {
-      propertyName = 'alimentationName';
+      propertyName = 'vaccineName';
     } else if (widget.lookupType == 'symptoms') {
       propertyName = 'symptomDescription';
     }

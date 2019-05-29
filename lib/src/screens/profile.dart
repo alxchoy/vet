@@ -8,11 +8,17 @@ import '../providers/models/client-model.dart';
 import '../shared/widgets/vet-input.dart';
 
 class ProfileScreen extends StatefulWidget {
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<dynamic> _getClientData() async {
     final token = await SharedPreferencesVet.getToken();
     final clientId = await SharedPreferencesVet.getClientId();
@@ -75,29 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
         ),
-        // child: Column(
-        //   children: <Widget>[
-        //     header(),
-        //     SizedBox(height: 40.0),
-        //     FutureBuilder(
-        //       future: _getClientData(),
-        //       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        //         if(snapshot.hasData) {
-        //           return snapshot.data != null ? ProfileForm(clientData: snapshot.data) : Text('Error...');
-        //         } else {
-        //           return Container(
-        //             child: CircularProgressIndicator(
-        //               backgroundColor: Colors.grey[350],
-        //               valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
-        //             ),
-        //             alignment: Alignment.center,
-        //             margin: EdgeInsets.only(top: 20.0)
-        //           );
-        //         }
-        //       },
-        //     )
-        //   ],
-        // ),
         padding: EdgeInsets.all(20.0)
       )
     );

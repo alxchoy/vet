@@ -13,13 +13,19 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   int _currentScreen = 0;
-  final List<Widget> _screens = [
+  List<Widget> _screens = [
     BandejaScreen(),
     ProfileScreen(),
     SubscriptionScreen()
   ];
+  List<String> _titles = [
+    'Mis mascotas',
+    'Mi perfil',
+    'Mi subscripción'
+  ];
 
   void _onTabNav(idx) {
+    print(idx);
     setState(() {
       _currentScreen = idx;
     });
@@ -29,7 +35,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Navigation Flutter'),
+        title: Text(_titles[_currentScreen], style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: _screens[_currentScreen],
       bottomNavigationBar: BottomNavigationBar(

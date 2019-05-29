@@ -37,6 +37,7 @@ class VetAppIcons {
   static const IconData huella = const IconData(0xe80e, fontFamily: _kFontFam);
   static const IconData info = const IconData(0xe80f, fontFamily: _kFontFam);
   static const IconData peso = const IconData(0xe810, fontFamily: _kFontFam);
+  static const IconData addphoto = const IconData(0xe811, fontFamily: _kFontFam);
   static const IconData save = const IconData(0xe812, fontFamily: _kFontFam);
   static const IconData search = const IconData(0xe813, fontFamily: _kFontFam);
   static const IconData sexo = const IconData(0xe814, fontFamily: _kFontFam);

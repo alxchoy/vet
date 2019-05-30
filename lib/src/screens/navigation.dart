@@ -25,7 +25,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
   ];
 
   void _onTabNav(idx) {
-    print(idx);
     setState(() {
       _currentScreen = idx;
     });

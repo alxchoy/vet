@@ -27,14 +27,16 @@ class _ResultScreenState extends State<ResultScreen> {
       appBar: AppBar(
         title: Text('Posibles enfermedades'),
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            DiseasesList(diseases: data['diseases']),
-            ProvidersList(providers: data['providers'])
-          ]
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0)
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              DiseasesList(diseases: data['diseases']),
+              ProvidersList(providers: data['providers'])
+            ]
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0)
+        )
       )
     );
   }
@@ -83,6 +85,11 @@ class ProvidersList extends StatelessWidget {
   final List<Provider> providers;
 
   ProvidersList({this.providers});
+
+  @override
+  Widget build(BuildContext context) {
+    return _providersRowList(context: context, providers: providers);
+  }
 
   Widget _providerDetail({Provider provider}) {
     return Container(
@@ -141,7 +148,6 @@ class ProvidersList extends StatelessWidget {
             ),
             flex: 2
           )
-
         ]
       ),
       decoration: BoxDecoration(
@@ -151,7 +157,7 @@ class ProvidersList extends StatelessWidget {
     );
   }
 
-  Widget _providerRow({Provider provider}) {
+  Widget _providerRow({BuildContext context, Provider provider}) {
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
@@ -174,7 +180,7 @@ class ProvidersList extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0)
               ),
               onTap: () {
-                print('tab detalle');
+                Navigator.pushNamed(context, '/provider', arguments: provider);
               }
             ),
             flex: 1
@@ -185,20 +191,15 @@ class ProvidersList extends StatelessWidget {
     );
   }
 
-  Widget _providersRowList({List<Provider> providers}) {
+  Widget _providersRowList({BuildContext context, List<Provider> providers}) {
     List<Widget> _listRow = [];
 
     for (var provider in providers) {
-      _listRow.add(_providerRow(provider: provider));
+      _listRow.add(_providerRow(context: context, provider: provider));
     }
 
     return Column(
       children: _listRow,
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _providersRowList(providers: providers);
   }
 }

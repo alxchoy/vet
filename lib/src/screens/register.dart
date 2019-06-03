@@ -33,10 +33,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
+          child: Stack(
             children: <Widget>[
-              _header(),
-              RegisterForm()
+              Positioned(
+                child: Column(
+                  children: <Widget>[
+                    _header(),
+                    RegisterForm()
+                  ]
+                )
+              )
             ]
           )
         )
@@ -92,15 +98,7 @@ class _RegisterFormState extends State<RegisterForm> {
               child: Icon(Icons.arrow_forward, color: Colors.white, size: 40.0,),
               elevation: 4.0,
               fillColor: Color.fromRGBO(90, 168, 158, 1.0),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                } else {
-                  setState(() {
-                    _autovalidate = true;
-                  });
-                }
-              },
+              onPressed: _saveForm,
               padding: EdgeInsets.all(20.0),
               shape: CircleBorder(),
             )
@@ -108,7 +106,7 @@ class _RegisterFormState extends State<RegisterForm> {
           crossAxisAlignment: CrossAxisAlignment.end
         ),
         margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 30.0),
-        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0)
+        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0)
       )
     );
   }

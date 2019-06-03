@@ -38,9 +38,9 @@ class _VetHeaderState extends State<VetHeader> {
                 BoxShadow(blurRadius: 5.0, color: Color.fromRGBO(0, 0, 0, 0.5), offset: Offset(1.0, 3.0))
               ],
               shape: BoxShape.circle,
-              image: DecorationImage(
-                image: widget.pet != null ? NetworkImage(widget.pet.petPathImage) : AssetImage('assets/img/addPhoto.png')
-              )
+              // image: DecorationImage(
+              //   image: widget.pet != null ? NetworkImage(widget.pet.petPathImage) : AssetImage('assets/img/addPhoto.png')
+              // )
             ),
             height: 150.0,
             margin: EdgeInsets.only(bottom: 30.0),

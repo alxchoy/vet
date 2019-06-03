@@ -14,9 +14,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var clientData;
   @override
   void initState() {
     super.initState();
+    clientData = _getClientData();
   }
 
   Future<dynamic> _getClientData() async {
@@ -57,16 +59,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SingleChildScrollView(
       child: Container(
         child: FutureBuilder(
-          future: _getClientData(),
+          future: clientData,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if(snapshot.hasData) {
               final Client data = snapshot.data;
 
-              return snapshot.data != null ? Column(
+              return data != null ? Column(
                 children: <Widget>[
                   header(name: data.clientFullName),
                   SizedBox(height: 40.0),
-                  ProfileForm(clientData: snapshot.data)
+                  ProfileForm(clientData: data)
                 ]
               ) : Text('Error...');
             } else {
@@ -153,12 +155,13 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             SizedBox(height: 20.0),
             VetCombo(
-              label: 'Tipo documento',
-              lookupType: 'documents',
+              initValue: widget.clientData.clientDocumentTypeId,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
-              }
+              },
+              label: 'Tipo documento',
+              lookupType: 'documents',
             ),
             SizedBox(height: 20.0),
             VetInput(

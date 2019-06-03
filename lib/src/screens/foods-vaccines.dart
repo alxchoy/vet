@@ -13,6 +13,7 @@ class FoodsVaccinesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(pet.toJson());
     return Scaffold(
       appBar: AppBar(title: Text('Vacunas')),
       body: SingleChildScrollView(

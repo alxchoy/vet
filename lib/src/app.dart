@@ -6,6 +6,7 @@ import './screens/navigation.dart';
 import './screens/pet.dart';
 import './screens/result.dart';
 import './screens/provider.dart';
+import './screens/register.dart';
 
 class App extends StatelessWidget {
   @override
@@ -18,7 +19,8 @@ class App extends StatelessWidget {
         '/navigation': (context) => NavigationScreen(),
         '/pet': (context) => PetScreen(),
         '/result': (context) => ResultScreen(),
-        '/provider': (context) => ProviderScreen()
+        '/provider': (context) => ProviderScreen(),
+        '/register': (context) => RegisterScreen()
       },
       theme: ThemeData(
         primaryColor: Color.fromRGBO(90, 168, 158, 1.0)

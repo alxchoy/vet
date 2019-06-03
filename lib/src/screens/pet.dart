@@ -68,8 +68,8 @@ class _PetFormState extends State<PetForm> {
   var _petWeight;
   var _habitatId;
 
-  void _showDialog() async {
-    final bool isUpdate = await showDialog(
+  void _showDialog({String typeAction, Pet pet}) async {
+    final params = await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
@@ -89,8 +89,10 @@ class _PetFormState extends State<PetForm> {
                   text: 'Aceptar',
                   textSize: 18.0,
                   onPress: () {
-                    Navigator.pop(context, true);
-                    // Navigator.popUntil(context, ModalRoute.withName('/navigation', true));
+                    Navigator.pop(context, {
+                      'action': typeAction,
+                      'data': pet
+                    });
                   }
                 )
               ]
@@ -101,12 +103,17 @@ class _PetFormState extends State<PetForm> {
       }
     );
 
-    if (isUpdate) {
+    if (params['action'] == 'update') {
       Navigator.pop(context, true);
+    } else if (params['action'] == 'create') {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: params['data']))
+      );
     }
   }
 
-  _saveForm() async {
+  _saveForm({String typeAction}) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       final clientId = await SharedPreferencesVet.getClientId();
@@ -127,7 +134,7 @@ class _PetFormState extends State<PetForm> {
         });
 
       if (response != null) {
-        _showDialog();
+        _showDialog(typeAction: typeAction, pet: response);
       }
     } else {
       setState(() => _autovalidate = true);
@@ -246,10 +253,7 @@ class _PetFormState extends State<PetForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: widget.pet))
-                );
+                _saveForm(typeAction: 'create');
               },
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))
@@ -271,7 +275,9 @@ class _PetFormState extends State<PetForm> {
               color: Color.fromRGBO(90, 168, 158, 1.0),
               text: 'Guardar',
               textSize: 24.0,
-              onPress: _saveForm
+              onPress: () {
+                _saveForm(typeAction: 'update');
+              }
             )
           ]
         )

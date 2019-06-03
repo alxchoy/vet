@@ -41,7 +41,7 @@ class Home extends StatelessWidget {
                     'Registrar'.toUpperCase(),
                     style: TextStyle(fontSize: 24, color: Colors.white),
                   ),
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(context, '/register'),
                   padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))
                 ),

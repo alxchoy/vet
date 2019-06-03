@@ -199,7 +199,7 @@ class PetService {
     }
   }
 
-  static Future<dynamic> createPet({data}) async {
+  static Future<Pet> createPet({data}) async {
     final token = await SharedPreferencesVet.getToken();
     final response = await http.post("${constants['urlApi']}/pet/create",
       body: json.encode(data),
@@ -211,8 +211,9 @@ class PetService {
 
     if (response.statusCode == 200) {
       final responseDecode = json.decode(response.body);
+      final Pet pet = Pet.fromJson(responseDecode);
 
-      return responseDecode;
+      return pet;
     } else {
       throw Exception('Falló el servicio createPet');
     }

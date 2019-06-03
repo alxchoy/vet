@@ -6,10 +6,10 @@ import '../shared/widgets/vet-add-list.dart';
 import '../shared/widgets/vet-button.dart';
 
 
-class VaccinesScreen extends StatelessWidget {
+class FoodsVaccinesScreen extends StatelessWidget {
   final Pet pet;
 
-  VaccinesScreen({this.pet});
+  FoodsVaccinesScreen({this.pet});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +20,18 @@ class VaccinesScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               VetHeader(pet: pet),
+              VetAddList(
+                label: 'Alimentación',
+                lookupType: 'aliments',
+                petId: pet.petId
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0)),
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
+              ),
+              SizedBox(height: 10.0),
               VetAddList(
                 label: 'Vacunas',
                 lookupType: 'vaccines',

@@ -4,6 +4,8 @@ import '../providers/services/pet-service.dart';
 import '../providers/services/shared-preferences.dart';
 import '../providers/models/pet-model.dart';
 
+import './pet.dart';
+
 class BandejaScreen extends StatefulWidget {
 
   @override
@@ -26,6 +28,17 @@ class _BandejaScreenState extends State<BandejaScreen> {
     return pets;
   }
 
+  _goToPet({data}) async {
+    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => PetScreen(pet: data)));
+    print('pruebaaaaaaa $result');
+
+    if (result != null && result == true) {
+      setState(() {
+        _pets = _getPetsList();
+      });
+    }
+  }
+
   OutlineButton _addPetBtn() {
     return OutlineButton(
       borderSide: BorderSide(color: Color.fromRGBO(159, 189, 184, 1.0), width: 2.0),
@@ -41,9 +54,7 @@ class _BandejaScreenState extends State<BandejaScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
       ),
-      onPressed: () {
-        Navigator.pushNamed(context, '/pet');
-      },
+      onPressed: _goToPet,
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))
     );
@@ -59,9 +70,7 @@ class _BandejaScreenState extends State<BandejaScreen> {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           child: CardPet(pet: snapshot.data[index]),
-          onTap: () {
-            Navigator.pushNamed(context, '/pet', arguments: snapshot.data[index]);
-          }
+          onTap: () => _goToPet(data: snapshot.data[index])
         );
       },
       itemCount: snapshot.data.length,
@@ -129,10 +138,10 @@ class _CardPetState extends State<CardPet> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               color: Colors.lightBlue,
-              image: DecorationImage(
-                image: NetworkImage(widget.pet.petPathImage),
-                fit: BoxFit.cover
-              )
+              // image: DecorationImage(
+              //   image: NetworkImage(widget.pet.petPathImage),
+              //   fit: BoxFit.cover
+              // )
             )
           ),
           Padding(
@@ -140,7 +149,7 @@ class _CardPetState extends State<CardPet> {
               children: <Widget>[
                 Text(
                   widget.pet.petName,
-                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w700)
+                  style: TextStyle(color: Colors.red, fontSize: 30, fontWeight: FontWeight.w700)
                 ),
                 Text(
                   "${widget.pet.petAge} ${widget.pet.petAge != 1 ? 'años' : 'año'}",

@@ -114,12 +114,13 @@ class _VetComboState extends State<VetCombo> {
               value: _selectValue
             )
           ) : Container(
-            child: Text('Seleccionar'),
+            child: Text('Seleccionar', style: TextStyle(fontSize: 18.0, color: Colors.grey[600])),
             padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0)
           )
         );
       },
-      validator: (value) {
+      validator: (val) {
+        var value = val ?? _selectValue;
         return value == null ? 'Selecciona una opción' : null;
       }
     );

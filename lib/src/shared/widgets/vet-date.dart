@@ -4,8 +4,10 @@ import 'package:intl/intl.dart';
 class VetDate extends StatefulWidget {
   final Icon icon;
   final String label;
+  final String initValue;
+  final dynamic onChange;
 
-  VetDate({this.icon, this.label});
+  VetDate({this.icon, this.label, this.initValue, this.onChange});
 
   @override
   _VetDateState createState() => _VetDateState();
@@ -13,22 +15,29 @@ class VetDate extends StatefulWidget {
 
 class _VetDateState extends State<VetDate> {
   static final _formatDate = DateFormat('dd-MM-yyyy');
-  var _currentDate = _formatDate.format(DateTime.now());
+  var _currentDate;
 
-  Future<void> _datePicker(BuildContext context, initDate) async {
-    var currentDate = DateTime.now();
-    // var initialDate =
-    print(initDate);
+  @override
+  void initState() {
+    super.initState();
+    _currentDate = widget.initValue != null ?
+      _formatDate.format(DateTime.parse(widget.initValue)) :
+      _formatDate.format(DateTime.now());
 
+    widget.onChange(_currentDate);
+  }
+
+  Future<void> _datePicker(BuildContext context) async {
     final date = await showDatePicker(
       context: context,
-      initialDate: currentDate,
+      initialDate: _formatDate.parse(_currentDate),
       firstDate: DateTime(2000),
       lastDate: DateTime(2050)
     );
 
     if(date != null) {
       setState(() => _currentDate = _formatDate.format(date));
+      widget.onChange(_currentDate);
     }
   }
 
@@ -57,11 +66,11 @@ class _VetDateState extends State<VetDate> {
               contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0)
             ),
             child: Container(
-              child: Text('$_currentDate'),
+              child: Text('$_currentDate', style: TextStyle(fontSize: 18.0)),
               padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0)
             )
           ),
-          onTap: () => _datePicker(context, '')
+          onTap: () => _datePicker(context)
         );
       }
     );

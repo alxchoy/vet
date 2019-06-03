@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 
 import '../providers/models/pet-model.dart';
+import '../providers/services/pet-service.dart';
+import '../providers/services/shared-preferences.dart';
 import '../shared/widgets/vet-input.dart';
 import '../shared/widgets/vet-combo.dart';
 import '../shared/widgets/vet-date.dart';
-import '../shared/widgets/vet-add-list.dart';
 import '../shared/widgets/vet-header.dart';
 import '../shared/widgets/vet-button.dart';
 import '../shared/vet_app_icons.dart';
 
-import './vaccines.dart';
+import './foods-vaccines.dart';
 import './report.dart';
 
 class PetScreen extends StatefulWidget {
+  final Pet pet;
+
+  PetScreen({this.pet});
 
   @override
   _PetScreenState createState() => _PetScreenState();
 }
 
 class _PetScreenState extends State<PetScreen> {
+
   @override
   Widget build(BuildContext context) {
-    final Pet pet = ModalRoute.of(context).settings.arguments;
+    // final Pet pet = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,8 +36,8 @@ class _PetScreenState extends State<PetScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              VetHeader(pet: pet),
-              PetForm(pet: pet)
+              VetHeader(pet: widget.pet),
+              PetForm(pet: widget.pet)
             ]
           ),
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0)
@@ -54,11 +59,80 @@ class PetForm extends StatefulWidget {
 class _PetFormState extends State<PetForm> {
   final _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
+  var _petName;
+  var _petBirthDay;
   var _specieId;
   var _raceId;
   var _sexId;
   var _sizeId;
+  var _petWeight;
   var _habitatId;
+
+  void _showDialog() async {
+    final bool isUpdate = await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Los datos fueron guardados correctamente',
+                  style: TextStyle(fontSize: 20.0), textAlign: TextAlign.center
+                ),
+                SizedBox(height: 30.0),
+                VetButton(
+                  color: Color.fromRGBO(90, 168, 158, 1.0),
+                  text: 'Aceptar',
+                  textSize: 18.0,
+                  onPress: () {
+                    Navigator.pop(context, true);
+                    // Navigator.popUntil(context, ModalRoute.withName('/navigation', true));
+                  }
+                )
+              ]
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+          )
+        );
+      }
+    );
+
+    if (isUpdate) {
+      Navigator.pop(context, true);
+    }
+  }
+
+  _saveForm() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      final clientId = await SharedPreferencesVet.getClientId();
+      final response = widget.pet != null ?
+        await PetService.updatePet(pet: widget.pet) :
+        await PetService.createPet(data: {
+          "raceId": _raceId,
+          "specieId": _specieId,
+          "clientId": clientId,
+          "petBirthDay": _petBirthDay,
+          "petName": _petName,
+          // "petAge": 12,
+          // "petSize": _sizeId,
+          "petWeight": _petWeight,
+          "HabitadId" : _habitatId,
+          "PetSizeId" : _sizeId,
+          "SexId" : _sexId,
+        });
+
+      if (response != null) {
+        _showDialog();
+      }
+    } else {
+      setState(() => _autovalidate = true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +148,16 @@ class _PetFormState extends State<PetForm> {
             VetInput(
               icon: Icon(VetAppIcons.huella, size: 45.0),
               initValue: widget.pet != null ? widget.pet.petName : '',
-              label: 'Nombre'
+              label: 'Nombre',
+              onSave: (val) => _petName = val,
             ),
             SizedBox(height: 20.0),
-            VetDate(icon: Icon(VetAppIcons.calendar, size: 45.0), label: 'Fecha de nacimiento'),
+            VetDate(
+              icon: Icon(VetAppIcons.calendar, size: 45.0),
+              label: 'Fecha de nacimiento',
+              initValue: widget.pet != null ? widget.pet.petBirthDay : null,
+              onChange: (val) => _petBirthDay = val,
+            ),
             SizedBox(height: 20.0),
             VetCombo(
               icon: Icon(VetAppIcons.specie, size: 45.0),
@@ -131,7 +211,8 @@ class _PetFormState extends State<PetForm> {
             VetInput(
               icon: Icon(VetAppIcons.peso, size: 45.0),
               initValue: widget.pet != null ? widget.pet.petWeight.toStringAsFixed(2) : null,
-              label: 'Peso'
+              label: 'Peso',
+              onSave: (val) => _petWeight = val
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -151,38 +232,29 @@ class _PetFormState extends State<PetForm> {
               ),
               margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
             ),
-            VetAddList(
-              label: 'Alimentación',
-              lookupType: 'aliments',
-              petId: widget.pet != null ? widget.pet.petId : null
-            ),
-            Container(
-              child: Text('Vacunas', style: TextStyle(fontSize: 22.0)),
-              decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.grey[300], width: 1.0)),
+            OutlineButton(
+              borderSide: BorderSide(color: Color.fromRGBO(159, 189, 184, 1.0), width: 2.0),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.add_circle_outline, color: Color.fromRGBO(90, 168, 158, 1.0), size: 30),
+                  SizedBox(width: 5),
+                  Text(
+                    'Agregar datos extras',
+                    style: TextStyle(color: Color.fromRGBO(90, 168, 158, 1.0), fontSize: 18)
+                  )
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
               ),
-              margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
-              padding: EdgeInsets.only(top: 20.0),
-              width: double.infinity
-            ),
-            VetButton(
-              color: Color.fromRGBO(90, 168, 158, 1.0),
-              text: 'Ver todas las vacunas',
-              textSize: 20.0,
-              onPress: () {
+              onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VaccinesScreen(pet: widget.pet))
+                  MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: widget.pet))
                 );
-              }
+              },
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))
             ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0)),
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
-            ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 60.0),
             VetButton(
               color: Color.fromRGBO(202, 57, 48, 1.0),
               text: 'Reportar enfermedad',
@@ -199,13 +271,7 @@ class _PetFormState extends State<PetForm> {
               color: Color.fromRGBO(90, 168, 158, 1.0),
               text: 'Guardar',
               textSize: 24.0,
-              onPress: () {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                } else {
-                  setState(() => _autovalidate = true);
-                }
-              }
+              onPress: _saveForm
             )
           ]
         )

@@ -44,4 +44,27 @@ class Pet {
     specieName: json['specieName'],
     vaccines: json['vaccines'],
   );
+
+  toJson() => {
+    'alimentations': alimentations,
+    'clientId': clientId,
+    'clientName': clientName,
+    'habitad': habitad,
+    'habitadId': habitadId,
+    'petAge': petAge,
+    'petBirthDay': petBirthDay,
+    'petId': petId,
+    'petName': petName,
+    'petPathImage': petPathImage,
+    'petSize': petSize,
+    'petSizeId': petSizeId,
+    'petWeight': petWeight,
+    'raceId': raceId,
+    'raceName': raceName,
+    'sex': sex,
+    'sexId': sexId,
+    'specieId': specieId,
+    'specieName': specieName,
+    'vaccines': vaccines
+  };
 }

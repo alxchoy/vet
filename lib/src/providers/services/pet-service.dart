@@ -62,7 +62,7 @@ class PetService {
       wasRemoved = true;
       return wasRemoved;
     } else {
-      throw Exception('Falló el servicio getAlimentationsByPet');
+      throw Exception('Falló el servicio deleteAlimentation');
     }
   }
 
@@ -85,7 +85,7 @@ class PetService {
 
       return responseDecode;
     } else {
-      throw Exception('Falló el servicio getAlimentationsByPet');
+      throw Exception('Falló el servicio addAlimentation');
     }
   }
 
@@ -102,7 +102,7 @@ class PetService {
 
       return responseDecode;
     } else {
-      throw Exception('Falló el servicio getAlimentationsByPet');
+      throw Exception('Falló el servicio getVaccinesByPet');
     }
   }
 
@@ -119,7 +119,7 @@ class PetService {
       wasRemoved = true;
       return wasRemoved;
     } else {
-      throw Exception('Falló el servicio getAlimentationsByPet');
+      throw Exception('Falló el servicio deleteVaccine');
     }
   }
 
@@ -142,7 +142,7 @@ class PetService {
 
       return responseDecode;
     } else {
-      throw Exception('Falló el servicio getAlimentationsByPet');
+      throw Exception('Falló el servicio addVaccine');
     }
   }
 
@@ -175,7 +175,46 @@ class PetService {
 
       return data;
     } else {
-      throw Exception('Falló el servicio getAlimentationsByPet');
+      throw Exception('Falló el servicio reportPet');
+    }
+  }
+
+  static Future<dynamic> updatePet({Pet pet}) async {
+    final bodyRequest = pet.toJson();
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.post("${constants['urlApi']}/pet/update",
+      body: json.encode(bodyRequest),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'content-type': 'application/json'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+
+      return responseDecode;
+    } else {
+      throw Exception('Falló el servicio updatePet');
+    }
+  }
+
+  static Future<dynamic> createPet({data}) async {
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.post("${constants['urlApi']}/pet/create",
+      body: json.encode(data),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'content-type': 'application/json'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+
+      return responseDecode;
+    } else {
+      throw Exception('Falló el servicio createPet');
     }
   }
 }

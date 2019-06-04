@@ -23,6 +23,14 @@ class PetScreen extends StatefulWidget {
 }
 
 class _PetScreenState extends State<PetScreen> {
+  bool _loading = false;
+
+  void _loadingService({bool loading}) {
+    print(loading);
+    setState(() {
+      _loading = loading;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +42,25 @@ class _PetScreenState extends State<PetScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
+          child: Stack(
             children: <Widget>[
-              VetHeader(pet: widget.pet),
-              PetForm(pet: widget.pet)
+              Column(
+                children: <Widget>[
+                  VetHeader(pet: widget.pet),
+                  PetForm(pet: widget.pet, callback: _loadingService)
+                ]
+              ),
+              // Positioned(
+              //   child: _loading ? Container(
+              //     child: Center(
+              //       child: CircularProgressIndicator(
+              //         backgroundColor: Colors.grey[350],
+              //         valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
+              //       )
+              //     ),
+              //     color: Color.fromRGBO(0, 0, 0, 0.3),
+              //   ) : Container()
+              // )
             ]
           ),
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0)
@@ -49,8 +72,9 @@ class _PetScreenState extends State<PetScreen> {
 
 class PetForm extends StatefulWidget {
   final Pet pet;
+  final dynamic callback;
 
-  PetForm({this.pet});
+  PetForm({this.pet, this.callback});
 
   @override
   _PetFormState createState() => _PetFormState();
@@ -68,7 +92,7 @@ class _PetFormState extends State<PetForm> {
   var _petWeight;
   var _habitatId;
 
-  void _showDialog({String typeAction, Pet pet}) async {
+  void _showDialog({String typeAction, pet}) async {
     final params = await showDialog(
       barrierDismissible: false,
       context: context,
@@ -108,13 +132,14 @@ class _PetFormState extends State<PetForm> {
     } else if (params['action'] == 'create') {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: params['data']))
+        MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: Pet.fromJson(params['data'])))
       );
     }
   }
 
   _saveForm({String typeAction}) async {
     if (_formKey.currentState.validate()) {
+      widget.callback(loading: true);
       _formKey.currentState.save();
       final clientId = await SharedPreferencesVet.getClientId();
       final response = widget.pet != null ?
@@ -133,6 +158,9 @@ class _PetFormState extends State<PetForm> {
           "SexId" : _sexId,
         });
 
+      print(response);
+
+      widget.callback(loading: false);
       if (response != null) {
         _showDialog(typeAction: typeAction, pet: response);
       }

@@ -98,10 +98,11 @@ class _VetComboState extends State<VetCombo> {
             child: DropdownButton(
               style: TextStyle(color: Colors.grey[900], fontSize: 18.0),
               hint: Text('Seleccionar'),
+              isExpanded: true,
               items: _lookupService.map((val) {
                 return DropdownMenuItem(
                   value: val[widget.keyProperties['keyValue']],
-                  child: Text(val[widget.keyProperties['keyDescription']])
+                  child: Text(val[widget.keyProperties['keyDescription']], maxLines: 1, overflow: TextOverflow.ellipsis)
                 );
               }).toList(),
               onChanged: (value) {

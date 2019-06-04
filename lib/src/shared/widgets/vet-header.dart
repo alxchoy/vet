@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../providers/models/pet-model.dart';
 
@@ -12,6 +15,13 @@ class VetHeader extends StatefulWidget {
 }
 
 class _VetHeaderState extends State<VetHeader> {
+  File _image;
+
+  Future<void> _getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    print(image);
+  }
 
   Widget petHeaderDetail({String lblTitle, String lblDetail}) {
     return Column(
@@ -31,20 +41,23 @@ class _VetHeaderState extends State<VetHeader> {
     return Container(
       child: Column(
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: <BoxShadow>[
-                BoxShadow(blurRadius: 5.0, color: Color.fromRGBO(0, 0, 0, 0.5), offset: Offset(1.0, 3.0))
-              ],
-              shape: BoxShape.circle,
-              // image: DecorationImage(
-              //   image: widget.pet != null ? NetworkImage(widget.pet.petPathImage) : AssetImage('assets/img/addPhoto.png')
-              // )
+          GestureDetector(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(blurRadius: 5.0, color: Color.fromRGBO(0, 0, 0, 0.5), offset: Offset(1.0, 3.0))
+                ],
+                shape: BoxShape.circle,
+                // image: DecorationImage(
+                //   image: widget.pet != null ? NetworkImage(widget.pet.petPathImage) : AssetImage('assets/img/addPhoto.png')
+                // )
+              ),
+              height: 150.0,
+              margin: EdgeInsets.only(bottom: 30.0),
+              width: 150.0,
             ),
-            height: 150.0,
-            margin: EdgeInsets.only(bottom: 30.0),
-            width: 150.0,
+            onTap: _getImage
           ),
           Row(
             children: <Widget>[

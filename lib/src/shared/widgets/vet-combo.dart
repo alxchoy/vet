@@ -12,6 +12,7 @@ class VetCombo extends StatefulWidget {
   final String label;
   final Map<String, String> keyProperties;
   final dynamic onChange;
+  final dynamic onSave;
   final dynamic dependingValue;
   final dynamic initValue;
 
@@ -21,6 +22,7 @@ class VetCombo extends StatefulWidget {
     this.label,
     this.keyProperties,
     this.onChange,
+    this.onSave,
     this.dependingValue,
     this.initValue
   });
@@ -32,7 +34,6 @@ class VetCombo extends StatefulWidget {
 class _VetComboState extends State<VetCombo> {
   List<dynamic> _lookupService;
   var _selectValue;
-
 
   @override
   void initState() {
@@ -119,6 +120,9 @@ class _VetComboState extends State<VetCombo> {
             padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0)
           )
         );
+      },
+      onSaved: (val) {
+        widget.onSave(_selectValue);
       },
       validator: (val) {
         var value = val ?? _selectValue;

@@ -179,11 +179,10 @@ class PetService {
     }
   }
 
-  static Future<dynamic> updatePet({Pet pet}) async {
-    final bodyRequest = pet.toJson();
+  static Future<dynamic> updatePet({data}) async {
     final token = await SharedPreferencesVet.getToken();
     final response = await http.post("${constants['urlApi']}/pet/update",
-      body: json.encode(bodyRequest),
+      body: json.encode(data),
       headers: {
         'Authorization': 'Bearer $token',
         'content-type': 'application/json'

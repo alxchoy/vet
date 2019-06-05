@@ -132,7 +132,7 @@ class _PetFormState extends State<PetForm> {
     } else if (params['action'] == 'create') {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: Pet.fromJson(params['data'])))
+        MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: params['data']))
       );
     }
   }
@@ -142,23 +142,24 @@ class _PetFormState extends State<PetForm> {
       widget.callback(loading: true);
       _formKey.currentState.save();
       final clientId = await SharedPreferencesVet.getClientId();
-      final response = widget.pet != null ?
-        await PetService.updatePet(pet: widget.pet) :
-        await PetService.createPet(data: {
-          "raceId": _raceId,
-          "specieId": _specieId,
-          "clientId": clientId,
-          "petBirthDay": _petBirthDay,
-          "petName": _petName,
-          // "petAge": 12,
-          // "petSize": _sizeId,
-          "petWeight": _petWeight,
-          "HabitadId" : _habitatId,
-          "PetSizeId" : _sizeId,
-          "SexId" : _sexId,
-        });
+      final request = {
+        "petId": widget.pet != null ? widget.pet.petId : null,
+        "raceId": _raceId,
+        "specieId": _specieId,
+        "clientId": clientId,
+        "petBirthDay": _petBirthDay,
+        "petName": _petName,
+        // "petAge": 12,
+        // "petSize": _sizeId,
+        "petWeight": _petWeight,
+        "HabitadId" : _habitatId,
+        "PetSizeId" : _sizeId,
+        "SexId" : _sexId,
+      };
 
-      print(response);
+      final response = widget.pet != null ?
+        await PetService.updatePet(data: request) :
+        await PetService.createPet(data: request);
 
       widget.callback(loading: false);
       if (response != null) {
@@ -203,7 +204,8 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Especie',
               lookupType: 'species',
-              onChange: (val) => setState(() => _specieId = val)
+              onChange: (val) => setState(() => _specieId = val),
+              onSave: (val) => _specieId = val,
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -216,7 +218,8 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Raza',
               lookupType: 'races',
-              onChange: (val) => _raceId = val
+              onChange: (val) => _raceId = val,
+              onSave: (val) => _raceId = val
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -228,7 +231,8 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Sexo',
               lookupType: 'sex',
-              onChange: (val) => _sexId = val
+              onChange: (val) => _sexId = val,
+              onSave: (val) => _sexId = val
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -240,7 +244,8 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Tamaño',
               lookupType: 'size',
-              onChange: (val) => _sizeId = val
+              onChange: (val) => _sizeId = val,
+              onSave: (val) => _sizeId = val
             ),
             SizedBox(height: 20.0),
             VetInput(
@@ -259,7 +264,8 @@ class _PetFormState extends State<PetForm> {
               },
               label: 'Habitat',
               lookupType: 'habitat',
-              onChange: (val) => _habitatId = val
+              onChange: (val) => _habitatId = val,
+              onSave: (val) => _habitatId = val
             ),
             Container(
               decoration: BoxDecoration(
@@ -281,7 +287,12 @@ class _PetFormState extends State<PetForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
               onPressed: () {
-                _saveForm(typeAction: 'create');
+                widget.pet == null ?
+                  _saveForm(typeAction: 'create') :
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FoodsVaccinesScreen(pet: widget.pet))
+                  );
               },
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))

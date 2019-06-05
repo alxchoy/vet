@@ -6,6 +6,7 @@ import '../providers/services/client-service.dart';
 import '../providers/models/client-model.dart';
 
 import '../shared/widgets/vet-input.dart';
+import '../shared/widgets/vet-button.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -101,13 +102,71 @@ class ProfileForm extends StatefulWidget {
 class _ProfileFormState extends State<ProfileForm> {
   final _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
+  bool _requiredCurrentPass = false;
   String _userName;
   String _userDocumentNumber;
+  int _userDocumentId;
   String _userEmail;
   String _userAlias;
   String _userCurrentPass;
   String _userNewPass;
   String _userValidPass;
+
+  void _showDialog({String description}) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  description,
+                  style: TextStyle(fontSize: 20.0), textAlign: TextAlign.center
+                ),
+                SizedBox(height: 30.0),
+                VetButton(
+                  color: Color.fromRGBO(202, 57, 48, 1.0),
+                  text: 'Aceptar',
+                  textSize: 18.0,
+                  onPress: () {
+                    Navigator.pop(context);
+                  }
+                )
+              ]
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+          )
+        );
+      }
+    );
+  }
+
+  void _updateDataClient() async {
+    print(_userNewPass);
+    print(_userValidPass);
+    if (_userNewPass == _userValidPass) {
+      print('valuee');
+      final clientId = await SharedPreferencesVet.getClientId();
+      final request = {
+        "ClientId" : clientId,
+        "ClientFullName" : _userName,
+        "ClientDocumentNumber" : _userDocumentNumber,
+        "ClientDocumentTypeId" : _userDocumentId,
+        // "ClientCellPhoneNumber" : "5555555",
+        // "ClientPhoneNumber" : "9999999",
+        "ClientEmail" : _userEmail,
+        // "ClientSexId" : 2
+      };
+      final response = await ClientService.updateClient(form: request);
+      print(response);
+    } else {
+      _showDialog(description: 'Valida tu nueva contraseña correctamente');
+    }
+  }
 
   FlatButton btnForm() {
     return FlatButton(
@@ -132,6 +191,7 @@ class _ProfileFormState extends State<ProfileForm> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
+          _updateDataClient();
         } else {
           setState(() => _autovalidate = true);
         }
@@ -150,7 +210,7 @@ class _ProfileFormState extends State<ProfileForm> {
           children: <Widget>[
             VetInput(
               label: 'Nombre',
-              onSave: (val) => _userDocumentNumber = val,
+              onSave: (val) => _userName = val,
               initValue: widget.clientData.clientFullName
             ),
             SizedBox(height: 20.0),
@@ -162,6 +222,8 @@ class _ProfileFormState extends State<ProfileForm> {
               },
               label: 'Tipo documento',
               lookupType: 'documents',
+              onChange: (val) => _userDocumentId = val,
+              onSave: (val) => _userDocumentId = val
             ),
             SizedBox(height: 20.0),
             VetInput(
@@ -180,11 +242,11 @@ class _ProfileFormState extends State<ProfileForm> {
               padding: EdgeInsets.only(top: 20.0),
               width: double.infinity
             ),
-            VetInput(label: 'Actual', onSave: (val) => _userCurrentPass = val, inputType: 'password',),
+            VetInput(label: 'Actual', onSave: (val) => _userCurrentPass = val, inputType: 'password', required: _requiredCurrentPass),
             SizedBox(height: 20.0),
-            VetInput(label: 'Nueva contraseña', onSave: (val) => _userNewPass = val, inputType: 'password'),
+            VetInput(label: 'Nueva contraseña', onSave: (val) => _userNewPass = val, inputType: 'password', required: false),
             SizedBox(height: 20.0),
-            VetInput(label: 'Repetir contraseña', onSave: (val) => _userValidPass = val, inputType: 'password'),
+            VetInput(label: 'Repetir contraseña', onSave: (val) => _userValidPass = val, inputType: 'password', required: false),
             SizedBox(height: 40.0),
             btnForm()
           ],

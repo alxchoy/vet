@@ -30,7 +30,6 @@ class _BandejaScreenState extends State<BandejaScreen> {
 
   _goToPet({data}) async {
     final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => PetScreen(pet: data)));
-    print('pruebaaaaaaa $result');
 
     if (result != null && result == true) {
       setState(() {
@@ -138,10 +137,10 @@ class _CardPetState extends State<CardPet> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               color: Colors.lightBlue,
-              // image: DecorationImage(
-              //   image: NetworkImage(widget.pet.petPathImage),
-              //   fit: BoxFit.cover
-              // )
+              image: DecorationImage(
+                image: NetworkImage(widget.pet.petPathImage),
+                fit: BoxFit.cover
+              )
             )
           ),
           Padding(
@@ -149,11 +148,11 @@ class _CardPetState extends State<CardPet> {
               children: <Widget>[
                 Text(
                   widget.pet.petName,
-                  style: TextStyle(color: Colors.red, fontSize: 30, fontWeight: FontWeight.w700)
+                  style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.w700)
                 ),
                 Text(
                   "${widget.pet.petAge} ${widget.pet.petAge != 1 ? 'años' : 'año'}",
-                  style: TextStyle(color: Colors.white, fontSize: 18)
+                  style: TextStyle(color: Colors.black, fontSize: 18)
                 )
               ],
               crossAxisAlignment: CrossAxisAlignment.start,

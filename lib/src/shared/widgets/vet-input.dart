@@ -7,8 +7,9 @@ class VetInput extends StatefulWidget {
   final Icon icon;
   final String validationType;
   final dynamic onSave;
+  final bool required;
 
-  VetInput({this.label, this.initValue, this.validationType, this.onSave, this.inputType, this.icon});
+  VetInput({this.label, this.initValue, this.validationType, this.onSave, this.inputType, this.icon, this.required = true});
 
 
   @override
@@ -49,7 +50,7 @@ class _VetInputState extends State<VetInput> {
       obscureText: widget.inputType == 'password',
       onSaved: widget.onSave,
       validator: (val) {
-        if (val.isEmpty) {
+        if (val.isEmpty && widget.required) {
           return 'Campo requerido';
         }
       }

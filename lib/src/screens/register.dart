@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../providers/services/client-service.dart';
 import '../shared/widgets/vet-input.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -69,6 +70,14 @@ class _RegisterFormState extends State<RegisterForm> {
   void _saveForm() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      if (_userPass == _userConfirmPass) {
+        // final request = {
+        //   "UserName" : "usuarioApp",
+        //   "UserPassword" : "123456",
+        //   "ClientEmail" : "luis@multiplica.com"
+        // }
+        // final response = await ClientService.createClient(form: )
+      }
     } else {
       setState(() {
         _autovalidate = true;

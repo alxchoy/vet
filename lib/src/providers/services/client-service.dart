@@ -74,4 +74,24 @@ class ClientService {
       throw Exception('Falló el servicio createClient');
     }
   }
+
+  static Future<dynamic> updateClient({form}) async {
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.post(
+      "${constants['urlApi']}/client/updateDataClient",
+      body: json.encode(form),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'content-type': 'application/json'
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+
+      return responseDecode;
+    } else {
+      throw Exception('Falló el servicio createClient');
+    }
+  }
 }

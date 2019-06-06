@@ -35,8 +35,6 @@ class LookupsService {
       'vaccines': _validateResponse(vaccines)
     };
 
-    print(response['documents']);
-
     return response;
   }
 }

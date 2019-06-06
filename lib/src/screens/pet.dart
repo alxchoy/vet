@@ -170,6 +170,10 @@ class _PetFormState extends State<PetForm> {
     }
   }
 
+  _showExtraSection() {
+    if (widget.pet != null) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -192,7 +196,7 @@ class _PetFormState extends State<PetForm> {
               icon: Icon(VetAppIcons.calendar, size: 45.0),
               label: 'Fecha de nacimiento',
               initValue: widget.pet != null ? widget.pet.petBirthDay : null,
-              onChange: (val) => _petBirthDay = val,
+              onChange: (val) => _petBirthDay = val
             ),
             SizedBox(height: 20.0),
             VetCombo(
@@ -273,7 +277,7 @@ class _PetFormState extends State<PetForm> {
               ),
               margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0)
             ),
-            OutlineButton(
+            widget.pet != null ? OutlineButton(
               borderSide: BorderSide(color: Color.fromRGBO(159, 189, 184, 1.0), width: 2.0),
               child: Row(
                 children: <Widget>[
@@ -296,9 +300,9 @@ class _PetFormState extends State<PetForm> {
               },
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))
-            ),
-            SizedBox(height: 60.0),
-            VetButton(
+            ) : Container(),
+            SizedBox(height: widget.pet != null ? 60.0 : 0.0),
+            widget.pet != null ? VetButton(
               color: Color.fromRGBO(202, 57, 48, 1.0),
               text: 'Reportar enfermedad',
               textSize: 24.0,
@@ -308,8 +312,8 @@ class _PetFormState extends State<PetForm> {
                   MaterialPageRoute(builder: (context) => ReportScreen(pet: widget.pet))
                 );
               }
-            ),
-            SizedBox(height: 20.0),
+            ) : Container(),
+            SizedBox(height: widget.pet != null ? 20.0 : 0.0),
             VetButton(
               color: Color.fromRGBO(90, 168, 158, 1.0),
               text: 'Guardar',

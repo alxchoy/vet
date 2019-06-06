@@ -102,7 +102,6 @@ class _LoginFormState extends State<LoginForm> {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           _saveTokenResponse();
-          _loadAllLookups();
         }
       },
       padding: EdgeInsets.all(20.0),
@@ -120,6 +119,8 @@ class _LoginFormState extends State<LoginForm> {
 
       SharedPreferencesVet.setToken(data['access_token']);
       SharedPreferencesVet.setClientId(dataClient['idLogIn']);
+
+      _loadAllLookups();
     } else {
       widget.callback(false);
       print(response.statusCode);

@@ -1,19 +1,42 @@
 import 'package:flutter/material.dart';
 
 import '../providers/models/provider-model.dart';
+import '../providers/services/provider-service.dart';
 
-class ProviderScreen extends StatelessWidget {
+class ProviderScreen extends StatefulWidget {
+
+  @override
+  _ProviderScreenState createState() => _ProviderScreenState();
+}
+
+class _ProviderScreenState extends State<ProviderScreen> {
+  Provider provider;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getProviderData();
+  }
+
+  getProviderData() async {
+    provider = ModalRoute.of(context).settings.arguments;
+    final response = await ProviderService.getProviderDetails(providerId: provider.providerId);
+    print(response);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Provider provider = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Nombre de la clínica', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child: provider != null ? Column(
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
@@ -22,9 +45,9 @@ class ProviderScreen extends StatelessWidget {
                   BoxShadow(blurRadius: 5.0, color: Color.fromRGBO(0, 0, 0, 0.5), offset: Offset(1.0, 3.0))
                 ],
                 shape: BoxShape.circle,
-                // image: DecorationImage(
-                //   image: widget.pet != null ? NetworkImage(widget.pet.petPathImage) : AssetImage('assets/img/addPhoto.png')
-                // )
+                image: DecorationImage(
+                  image: NetworkImage(provider.pathImage)
+                )
               ),
               height: 150.0,
               margin: EdgeInsets.only(bottom: 30.0),
@@ -35,19 +58,21 @@ class ProviderScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('RUC'),
+                  Text(provider.providerDocumentType, style: TextStyle(fontSize: 16)),
                   SizedBox(height: 5.0),
-                  Text('12345678912')
+                  Text(provider.providerDocumentNumber, style: TextStyle(fontSize: 16))
                 ]
               ),
               decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
               ),
+              margin: EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 20.0),
               padding: EdgeInsets.only(bottom: 10.0)
             ),
             SedesList()
           ]
-        ),
+        ) : Container(),
+        padding: EdgeInsets.fromLTRB(20.0, 30.0, 0.0, 30.0)
       )
     );
   }

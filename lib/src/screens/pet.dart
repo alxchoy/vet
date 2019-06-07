@@ -26,7 +26,6 @@ class _PetScreenState extends State<PetScreen> {
   bool _loading = false;
 
   void _loadingService({bool loading}) {
-    print(loading);
     setState(() {
       _loading = loading;
     });

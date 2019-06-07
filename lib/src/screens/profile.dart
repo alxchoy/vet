@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:veterinary/src/shared/widgets/vet-combo.dart';
 
 import '../providers/services/shared-preferences.dart';
 import '../providers/services/client-service.dart';
@@ -7,6 +6,9 @@ import '../providers/models/client-model.dart';
 
 import '../shared/widgets/vet-input.dart';
 import '../shared/widgets/vet-button.dart';
+import '../shared/widgets/vet-combo.dart';
+
+import '../utils/helpers.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -67,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               return data != null ? Column(
                 children: <Widget>[
-                  header(name: data.clientFullName),
+                  header(name: data.clientFullName ?? ''),
                   SizedBox(height: 40.0),
                   ProfileForm(clientData: data)
                 ]
@@ -145,7 +147,7 @@ class _ProfileFormState extends State<ProfileForm> {
     );
   }
 
-  void _updateDataClient() async {
+  void _updateDataClient({BuildContext context}) async {
     print(_userNewPass);
     print(_userValidPass);
     if (_userNewPass == _userValidPass) {
@@ -162,13 +164,24 @@ class _ProfileFormState extends State<ProfileForm> {
         // "ClientSexId" : 2
       };
       final response = await ClientService.updateClient(form: request);
+      if (response != null) {
+        Helpers.showVetDialog(
+          context: context,
+          description: 'Sus datos fueron actualizados',
+          btnConfig: {
+            'color': Color.fromRGBO(90, 168, 158, 1.0),
+            'text': 'Aceptar',
+            'action': () => Navigator.pop(context)
+          }
+        );
+      }
       print(response);
     } else {
       _showDialog(description: 'Valida tu nueva contraseña correctamente');
     }
   }
 
-  FlatButton btnForm() {
+  FlatButton btnForm({BuildContext cntx}) {
     return FlatButton(
       child: Container(
         child: Center(
@@ -191,7 +204,7 @@ class _ProfileFormState extends State<ProfileForm> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          _updateDataClient();
+          _updateDataClient(context: cntx);
         } else {
           setState(() => _autovalidate = true);
         }
@@ -211,11 +224,11 @@ class _ProfileFormState extends State<ProfileForm> {
             VetInput(
               label: 'Nombre',
               onSave: (val) => _userName = val,
-              initValue: widget.clientData.clientFullName
+              initValue: widget.clientData.clientFullName ?? ''
             ),
             SizedBox(height: 20.0),
             VetCombo(
-              initValue: widget.clientData.clientDocumentTypeId,
+              initValue: widget.clientData.clientDocumentTypeId ?? 1,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'
@@ -229,12 +242,12 @@ class _ProfileFormState extends State<ProfileForm> {
             VetInput(
               label: 'Nro. documento',
               onSave: (val) => _userDocumentNumber = val,
-              initValue: widget.clientData.clientDocumentNumber
+              initValue: widget.clientData.clientDocumentNumber ?? ''
             ),
             SizedBox(height: 20.0),
-            VetInput(label: 'Correo', onSave: (val) => _userEmail = val, initValue: widget.clientData.clientEmail),
+            VetInput(label: 'Correo', onSave: (val) => _userEmail = val, initValue: widget.clientData.clientEmail ?? ''),
             SizedBox(height: 20.0),
-            VetInput(label: 'Usuario', onSave: (val) => _userAlias = val, initValue: widget.clientData.userName),
+            VetInput(label: 'Usuario', onSave: (val) => _userAlias = val, initValue: widget.clientData.userName ?? ''),
             Container(
               child: Text('Contraseña', style: TextStyle(fontSize: 22.0)),
               decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[300], width: 1.0))),
@@ -248,7 +261,7 @@ class _ProfileFormState extends State<ProfileForm> {
             SizedBox(height: 20.0),
             VetInput(label: 'Repetir contraseña', onSave: (val) => _userValidPass = val, inputType: 'password', required: false),
             SizedBox(height: 40.0),
-            btnForm()
+            btnForm(cntx: context)
           ],
         )
       )

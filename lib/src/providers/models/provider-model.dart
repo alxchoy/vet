@@ -41,4 +41,19 @@ class Provider {
     providerId: json['providerId'],
     providerName: json['providerName']
   );
+
+  toJson() => {
+    'headquaterDescription': headquaterDescription,
+    'headquaterEmail': headquaterEmail,
+    'headquaterId': headquaterId,
+    'headquaterPhone': headquaterPhone,
+    'headqueaterAddress': headqueaterAddress,
+    'latitud': latitud,
+    'longitud': longitud,
+    'pathImage': pathImage,
+    'providerDocumentNumber': providerDocumentNumber,
+    'providerDocumentType': providerDocumentType,
+    'providerId': providerId,
+    'providerName': providerName
+  };
 }

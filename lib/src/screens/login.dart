@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../providers/services/shared-preferences.dart';
 import '../providers/services/client-service.dart';
 import '../providers/services/lookups-service.dart';
-
 import '../shared/widgets/vet-input.dart';
+import '../utils/helpers.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -123,9 +123,15 @@ class _LoginFormState extends State<LoginForm> {
       _loadAllLookups();
     } else {
       widget.callback(false);
-      print(response.statusCode);
-      print(response.body);
-      throw Exception('Failed to load post save token');
+      Helpers.showVetDialog(
+        description: response.body,
+        context: context,
+        btnConfig: {
+          'color': Color.fromRGBO(202, 57, 48, 1.0),
+          'text': 'Aceptar',
+          'action': () => Navigator.pop(context)
+        }
+      );
     }
   }
 

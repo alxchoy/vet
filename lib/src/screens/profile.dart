@@ -224,7 +224,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             SizedBox(height: 20.0),
             VetCombo(
-              initValue: widget.clientData.clientDocumentTypeId ?? 1,
+              initValue: widget.clientData.clientDocumentTypeId != 0 ? widget.clientData.clientDocumentTypeId : 2,
               keyProperties: {
                 'keyValue': 'id',
                 'keyDescription': 'description'

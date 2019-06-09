@@ -16,7 +16,6 @@ class ProviderService {
     );
 
     if(response.statusCode == 200) {
-      print(response);
       return json.decode(response.body);
     } else {
       throw Exception('Falló el servicio getClientId');

@@ -148,10 +148,7 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   void _updateDataClient({BuildContext context}) async {
-    print(_userNewPass);
-    print(_userValidPass);
     if (_userNewPass == _userValidPass) {
-      print('valuee');
       final clientId = await SharedPreferencesVet.getClientId();
       final request = {
         "ClientId" : clientId,
@@ -175,7 +172,6 @@ class _ProfileFormState extends State<ProfileForm> {
           }
         );
       }
-      print(response);
     } else {
       _showDialog(description: 'Valida tu nueva contraseña correctamente');
     }

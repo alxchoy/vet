@@ -16,7 +16,7 @@ class VetInfoList extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          Text(name, style: TextStyle(fontSize: 18.0)),
+          Text(name, style: TextStyle(fontSize: 16.0)),
           SizedBox(width: 20.0),
           Icon(VetAppIcons.info, size: 20.0)
         ]
@@ -25,8 +25,15 @@ class VetInfoList extends StatelessWidget {
     );
   }
 
+  Widget _title() {
+    return Padding(
+      child: Text(titlelist ?? '', style: TextStyle(fontSize: 20.0)),
+      padding: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 10.0)
+    );
+  }
+
   List<Widget> _mapListItem({String title}) {
-    List<Widget> listWidgets = [];
+    List<Widget> listWidgets = [_title()];
 
     for (var item in listItems) {
       listWidgets.add(_rowItem(name: item[nameProperty]));
@@ -39,6 +46,7 @@ class VetInfoList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: _mapListItem(title: titlelist)
       )
     );

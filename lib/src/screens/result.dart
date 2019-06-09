@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../providers/models/disease-model.dart';
 import '../providers/models/provider-model.dart';
 import '../shared/vet_app_icons.dart';
+import './provider.dart';
 
 class ResultScreen extends StatefulWidget {
 
@@ -98,10 +99,10 @@ class ProvidersList extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                // image: DecorationImage(
-                //   image: NetworkImage(provider.pathImage),
-                //   fit: BoxFit.cover
-                // ),
+                image: DecorationImage(
+                  image: NetworkImage(provider.pathImage),
+                  fit: BoxFit.cover
+                ),
                 color: Colors.green,
                 shape: BoxShape.circle,
               ),
@@ -180,7 +181,10 @@ class ProvidersList extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0)
               ),
               onTap: () {
-                Navigator.pushNamed(context, '/provider', arguments: provider);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProviderScreen(providerId: provider.providerId))
+                );
               }
             ),
             flex: 1

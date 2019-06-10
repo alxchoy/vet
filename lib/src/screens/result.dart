@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../providers/models/disease-model.dart';
 import '../providers/models/provider-model.dart';
 import '../shared/vet_app_icons.dart';
+import '../shared/widgets/vet-button.dart';
 import './provider.dart';
+import './map.dart';
 
 class ResultScreen extends StatefulWidget {
 
@@ -33,7 +35,21 @@ class _ResultScreenState extends State<ResultScreen> {
           child: Column(
             children: <Widget>[
               DiseasesList(diseases: data['diseases']),
-              ProvidersList(providers: data['providers'])
+              ProvidersList(providers: data['providers']),
+              Container(
+                child: VetButton(
+                  color: Color.fromRGBO(90, 168, 158, 1.0),
+                  text: 'Ver mapa',
+                  textSize: 22.0,
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MapScreen(providers: data['providers']))
+                    );
+                  },
+                ),
+                margin: EdgeInsets.only(top: 40.0)
+              )
             ]
           ),
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0)
@@ -90,6 +106,17 @@ class ProvidersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _providersRowList(context: context, providers: providers);
+  }
+
+  Widget _providerTitle() {
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Text('Puede atenderlo', style: TextStyle(fontSize: 22.0)),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
+      ),
+      padding: EdgeInsets.only(bottom: 10.0)
+    );
   }
 
   Widget _providerDetail({Provider provider}) {
@@ -196,7 +223,7 @@ class ProvidersList extends StatelessWidget {
   }
 
   Widget _providersRowList({BuildContext context, List<Provider> providers}) {
-    List<Widget> _listRow = [];
+    List<Widget> _listRow = [_providerTitle()];
 
     for (var provider in providers) {
       _listRow.add(_providerRow(context: context, provider: provider));

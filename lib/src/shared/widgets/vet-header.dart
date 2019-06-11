@@ -17,10 +17,43 @@ class VetHeader extends StatefulWidget {
 class _VetHeaderState extends State<VetHeader> {
   File _image;
 
-  Future<void> _getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+  Future<void> _showDialogOptionsPicture() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: new Text('Tomar una foto'),
+                  onTap: _openCamera,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                ),
+                GestureDetector(
+                  child: new Text('Seleccionar una imagen de tu galería'),
+                  onTap: _openGallery,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
 
-    print(image);
+  Future<void> _openCamera() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    print('result image from camera:::: $image');
+    Navigator.pop(context);
+  }
+
+  Future<void> _openGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    print('result image from gallery:::: $image');
+    Navigator.pop(context);
   }
 
   Widget petHeaderDetail({String lblTitle, String lblDetail}) {
@@ -60,7 +93,7 @@ class _VetHeaderState extends State<VetHeader> {
               margin: EdgeInsets.only(bottom: 30.0),
               width: 150.0,
             ),
-            onTap: _getImage
+            onTap: _showDialogOptionsPicture
           ),
           Row(
             children: <Widget>[

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../providers/models/pet-model.dart';
+import '../../providers/services/pet-service.dart';
 
 class VetHeader extends StatefulWidget {
   final Pet pet;
+  final bool takePicture;
 
-  VetHeader({this.pet});
+  VetHeader({this.pet, this.takePicture});
 
   @override
   _VetHeaderState createState() => _VetHeaderState();
@@ -46,8 +48,13 @@ class _VetHeaderState extends State<VetHeader> {
 
   Future<void> _openCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    print('result image from camera:::: $image');
     Navigator.pop(context);
+    setState(() {
+      _image = image;
+    });
+
+
+    // await PetService.loadPetImage(petId: '${widget.pet.petId}', imageFile: image);
   }
 
   Future<void> _openGallery() async {
@@ -74,26 +81,45 @@ class _VetHeaderState extends State<VetHeader> {
     return Container(
       child: Column(
         children: <Widget>[
-          GestureDetector(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(blurRadius: 5.0, color: Color.fromRGBO(0, 0, 0, 0.5), offset: Offset(1.0, 3.0))
-                ],
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: widget.pet != null ?
-                    NetworkImage(widget.pet.petPathImage) :
-                    AssetImage('assets/img/addPhoto.png'),
-                  fit: widget.pet != null ? BoxFit.cover : BoxFit.none
+          Container(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(blurRadius: 5.0, color: Color.fromRGBO(0, 0, 0, 0.5), offset: Offset(1.0, 3.0))
+                    ],
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      // image: widget.pet != null ?
+                      //   NetworkImage(widget.pet.petPathImage) :
+                      //   AssetImage('assets/img/addPhoto.png'),
+                      image: _image != null ? FileImage(_image) : NetworkImage(widget.pet.petPathImage),
+                      fit: widget.pet != null ? BoxFit.cover : BoxFit.none
+                    )
+                  ),
+                  height: 170.0,
+                  margin: EdgeInsets.only(bottom: 30.0),
+                  width: 170.0,
+                ),
+                Positioned(
+                  bottom: 25,
+                  right: 0,
+                  child: widget.takePicture == true ? GestureDetector(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(90, 168, 158, 1.0),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.camera_alt, color: Colors.white, size: 40.0),
+                      padding: EdgeInsets.all(10.0)
+                    ),
+                    onTap: _showDialogOptionsPicture
+                  ): Container()
                 )
-              ),
-              height: 150.0,
-              margin: EdgeInsets.only(bottom: 30.0),
-              width: 150.0,
-            ),
-            onTap: _showDialogOptionsPicture
+              ]
+            )
           ),
           Row(
             children: <Widget>[

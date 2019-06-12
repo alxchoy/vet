@@ -66,7 +66,7 @@ class _ReportScreenState extends State<ReportScreen> {
                     VetButton(
                       color: Color.fromRGBO(202, 57, 48, 1.0),
                       text: 'Reportar',
-                      textSize: 24.0,
+                      textSize: 22.0,
                       onPress: _getReportData
                     )
                   ]

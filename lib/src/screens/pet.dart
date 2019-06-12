@@ -45,21 +45,10 @@ class _PetScreenState extends State<PetScreen> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  VetHeader(pet: widget.pet),
+                  VetHeader(pet: widget.pet, takePicture: true),
                   PetForm(pet: widget.pet, callback: _loadingService)
                 ]
               ),
-              // Positioned(
-              //   child: _loading ? Container(
-              //     child: Center(
-              //       child: CircularProgressIndicator(
-              //         backgroundColor: Colors.grey[350],
-              //         valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(90, 168, 158, 1.0)),
-              //       )
-              //     ),
-              //     color: Color.fromRGBO(0, 0, 0, 0.3),
-              //   ) : Container()
-              // )
             ]
           ),
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0)
@@ -304,7 +293,7 @@ class _PetFormState extends State<PetForm> {
             widget.pet != null ? VetButton(
               color: Color.fromRGBO(202, 57, 48, 1.0),
               text: 'Reportar enfermedad',
-              textSize: 24.0,
+              textSize: 22.0,
               onPress: () {
                 Navigator.push(
                   context,
@@ -316,7 +305,7 @@ class _PetFormState extends State<PetForm> {
             VetButton(
               color: Color.fromRGBO(90, 168, 158, 1.0),
               text: 'Guardar',
-              textSize: 24.0,
+              textSize: 22.0,
               onPress: () {
                 _saveForm(typeAction: 'update');
               }

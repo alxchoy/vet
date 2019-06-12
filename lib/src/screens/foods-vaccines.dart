@@ -41,7 +41,7 @@ class FoodsVaccinesScreen extends StatelessWidget {
               VetButton(
                 color: Color.fromRGBO(90, 168, 158, 1.0),
                 text: 'Finalizar',
-                textSize: 24.0,
+                textSize: 22.0,
                 onPress: () {
                   Navigator.pop(context);
                 }

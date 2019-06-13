@@ -220,7 +220,7 @@ class PetService {
     }
   }
 
-  static Future<void> loadPetImage({petId, File imageFile}) async {
+  static Future<dynamic> loadPetImage({petId, File imageFile}) async {
     final token = await SharedPreferencesVet.getToken();
     final uri = Uri.parse("${constants['urlApi']}/pet/uploadImage");
 
@@ -233,26 +233,12 @@ class PetService {
 
     var response = await request.send();
 
-    print(response);
-    print(response.statusCode);
+    return response;
 
+    // print(response.statusCode);
 
-
-
-    // final response = await http.post("${constants['urlApi']}/pet/uploadImage",
-    //   body: form,
-    //   headers: {
-    //     "Authorization": 'Bearer $token',
-    //     "accept": "application/x-www-form-urlencoded",
-    //     "content-type": "application/x-www-form-urlencoded"
-    //   }
-    // );
-
-    // if (response.statusCode == 200) {
-    //   final responseDecode = json.decode(response.body);
-    //   print(responseDecode);
-    // } else {
-    //   throw Exception('Falló el servicio loadPetImage');
-    // }
+    // response.stream.transform(utf8.decoder).listen((value) {
+    //   return value;
+    // });
   }
 }

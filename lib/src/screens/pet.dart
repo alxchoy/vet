@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../providers/models/pet-model.dart';
@@ -31,6 +33,11 @@ class _PetScreenState extends State<PetScreen> {
     });
   }
 
+  void _getImagePath(value) {
+    final data = json.decode(value);
+    // widget.pet.petPathImage = data['petPathImage'];
+  }
+
   @override
   Widget build(BuildContext context) {
     // final Pet pet = ModalRoute.of(context).settings.arguments;
@@ -45,7 +52,7 @@ class _PetScreenState extends State<PetScreen> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  VetHeader(pet: widget.pet, takePicture: true),
+                  VetHeader(pet: widget.pet, takePicture: true, callback: _getImagePath),
                   PetForm(pet: widget.pet, callback: _loadingService)
                 ]
               ),
@@ -156,10 +163,6 @@ class _PetFormState extends State<PetForm> {
     } else {
       setState(() => _autovalidate = true);
     }
-  }
-
-  _showExtraSection() {
-    if (widget.pet != null) {}
   }
 
   @override

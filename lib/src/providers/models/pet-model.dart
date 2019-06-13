@@ -3,7 +3,7 @@ class Pet {
   final String habitad;
   final String petBirthDay;
   final String petName;
-  final String petPathImage;
+  String petPathImage;
   final String petSize;
   final String raceName;
   final String sex;
@@ -67,4 +67,8 @@ class Pet {
     'specieName': specieName,
     'vaccines': vaccines
   };
+
+  setPathImage(path) {
+    this.petPathImage = path;
+  }
 }

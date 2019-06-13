@@ -82,6 +82,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   static String _userName;
   static String _userPassword;
+  bool _autovalidate = false;
 
   Text recoveryPassword() {
     return Text(
@@ -102,6 +103,8 @@ class _LoginFormState extends State<LoginForm> {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           _saveTokenResponse();
+        } else {
+          setState(() => _autovalidate = true);
         }
       },
       padding: EdgeInsets.all(20.0),
@@ -145,7 +148,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      autovalidate: true,
+      autovalidate: _autovalidate,
       key: _formKey,
       child: Container(
         child: Column(

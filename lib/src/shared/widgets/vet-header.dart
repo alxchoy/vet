@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,8 +10,9 @@ import '../../providers/services/pet-service.dart';
 class VetHeader extends StatefulWidget {
   final Pet pet;
   final bool takePicture;
+  final dynamic callback;
 
-  VetHeader({this.pet, this.takePicture});
+  VetHeader({this.pet, this.takePicture, this.callback});
 
   @override
   _VetHeaderState createState() => _VetHeaderState();
@@ -49,18 +51,33 @@ class _VetHeaderState extends State<VetHeader> {
   Future<void> _openCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     Navigator.pop(context);
-    setState(() {
-      _image = image;
-    });
 
+    if (image != null) {
+      final response = await PetService.loadPetImage(petId: '${widget.pet.petId}', imageFile: image);
+      response.stream.transform(utf8.decoder).listen((value) {
+        widget.callback(value);
+      });
 
-    // await PetService.loadPetImage(petId: '${widget.pet.petId}', imageFile: image);
+      setState(() {
+        _image = image;
+      });
+    }
   }
 
   Future<void> _openGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    print('result image from gallery:::: $image');
     Navigator.pop(context);
+
+    if (image != null) {
+      final response = await PetService.loadPetImage(petId: '${widget.pet.petId}', imageFile: image);
+      response.stream.transform(utf8.decoder).listen((value) {
+        widget.callback(value);
+      });
+
+      setState(() {
+        _image = image;
+      });
+    }
   }
 
   Widget petHeaderDetail({String lblTitle, String lblDetail}) {

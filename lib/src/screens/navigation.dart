@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './bandeja.dart';
 import './profile.dart';
 import './subscription.dart';
+import './services.dart';
 
 import '../shared/vet_app_icons.dart';
 
@@ -16,11 +17,13 @@ class _NavigationScreenState extends State<NavigationScreen> {
   List<Widget> _screens = [
     BandejaScreen(),
     ProfileScreen(),
+    ServicesScreen(),
     SubscriptionScreen()
   ];
   List<String> _titles = [
     'Mis mascotas',
     'Mi perfil',
+    'Servicios',
     'Mi subscripción'
   ];
 
@@ -40,6 +43,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ),
       body: _screens[_currentScreen],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentScreen,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -49,6 +53,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             title: Text('Mi perfil')
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            title: Text('Servicios')
           ),
           BottomNavigationBarItem(
             icon: Icon(VetAppIcons.start),

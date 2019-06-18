@@ -183,7 +183,7 @@ class _ProfileFormState extends State<ProfileForm> {
         child: Center(
           child: Text(
             'Guardar'.toUpperCase(),
-            style: TextStyle(fontSize: 24, color: Colors.white),
+            style: TextStyle(fontSize: 22, color: Colors.white),
           )
         ),
         decoration: BoxDecoration(
@@ -257,7 +257,16 @@ class _ProfileFormState extends State<ProfileForm> {
             SizedBox(height: 20.0),
             VetInput(label: 'Repetir contraseña', onSave: (val) => _userValidPass = val, inputType: 'password', required: false),
             SizedBox(height: 40.0),
-            btnForm(cntx: context)
+            btnForm(cntx: context),
+            SizedBox(height: 20.0),
+            VetButton(
+              color: Color.fromRGBO(202, 57, 48, 1.0),
+              text: 'Cerrar sesión',
+              textSize: 22.0,
+              onPress: () {
+                Navigator.pushNamed(context, '/login');
+              }
+            )
           ],
         )
       )

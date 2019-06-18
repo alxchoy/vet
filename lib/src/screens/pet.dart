@@ -34,8 +34,7 @@ class _PetScreenState extends State<PetScreen> {
   }
 
   void _getImagePath(value) {
-    final data = json.decode(value);
-    // widget.pet.petPathImage = data['petPathImage'];
+    widget.pet.petPathImage = value['petPathImage'];
   }
 
   @override

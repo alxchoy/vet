@@ -13,7 +13,7 @@ class Home extends StatelessWidget {
                   child: Container(
                     child: Text(
                       'Ingresar'.toUpperCase(),
-                      style: TextStyle(fontSize: 24, color: Colors.white),
+                      style: TextStyle(fontSize: 22, color: Colors.white),
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50.0),
@@ -39,7 +39,7 @@ class Home extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.white, width: 2.0),
                   child: Text(
                     'Registrar'.toUpperCase(),
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                    style: TextStyle(fontSize: 22, color: Colors.white),
                   ),
                   onPressed: () => Navigator.pushNamed(context, '/register'),
                   padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0),

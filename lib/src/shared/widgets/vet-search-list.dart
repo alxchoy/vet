@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 class VetListSearch extends SearchDelegate {
   final List<dynamic> list;
   final String propertyName;
+  final bool back;
 
-  VetListSearch({this.list, this.propertyName});
+  VetListSearch({this.list, this.propertyName, this.back = true});
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(icon: Icon(Icons.search), onPressed: () {})
-    ];
+    return [];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
-    return null;
+    return this.back ? null : Icon(Icons.search);
   }
 
   @override

@@ -21,7 +21,7 @@ class VetHeader extends StatefulWidget {
 class _VetHeaderState extends State<VetHeader> {
   File _image;
 
-  Future<void> _showDialogOptionsPicture() {
+  Future<void> _showDialogOptionsPicture({BuildContext context}) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -31,14 +31,14 @@ class _VetHeaderState extends State<VetHeader> {
               children: <Widget>[
                 GestureDetector(
                   child: new Text('Tomar una foto'),
-                  onTap: _openCamera,
+                  onTap: () => _openCamera(context: context),
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                 ),
                 GestureDetector(
                   child: new Text('Seleccionar una imagen de tu galería'),
-                  onTap: _openGallery,
+                  onTap: () => _openGallery(context: context),
                 ),
               ],
             ),
@@ -48,15 +48,13 @@ class _VetHeaderState extends State<VetHeader> {
     );
   }
 
-  Future<void> _openCamera() async {
+  Future<void> _openCamera({BuildContext context}) async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     Navigator.pop(context);
 
     if (image != null) {
       final response = await PetService.loadPetImage(petId: '${widget.pet.petId}', imageFile: image);
-      response.stream.transform(utf8.decoder).listen((value) {
-        widget.callback(value);
-      });
+      widget.callback(response);
 
       setState(() {
         _image = image;
@@ -64,15 +62,13 @@ class _VetHeaderState extends State<VetHeader> {
     }
   }
 
-  Future<void> _openGallery() async {
+  Future<void> _openGallery({BuildContext context}) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     Navigator.pop(context);
 
     if (image != null) {
       final response = await PetService.loadPetImage(petId: '${widget.pet.petId}', imageFile: image);
-      response.stream.transform(utf8.decoder).listen((value) {
-        widget.callback(value);
-      });
+      widget.callback(response);
 
       setState(() {
         _image = image;
@@ -132,7 +128,7 @@ class _VetHeaderState extends State<VetHeader> {
                       child: Icon(Icons.camera_alt, color: Colors.white, size: 40.0),
                       padding: EdgeInsets.all(10.0)
                     ),
-                    onTap: _showDialogOptionsPicture
+                    onTap: () => _showDialogOptionsPicture(context: context)
                   ): Container()
                 )
               ]

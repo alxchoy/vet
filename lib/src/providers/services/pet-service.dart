@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:path/path.dart';
 
 import '../models/pet-model.dart';
 import '../models/disease-model.dart';
@@ -222,23 +223,38 @@ class PetService {
 
   static Future<dynamic> loadPetImage({petId, File imageFile}) async {
     final token = await SharedPreferencesVet.getToken();
-    final uri = Uri.parse("${constants['urlApi']}/pet/uploadImage");
 
-    var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    var length = await imageFile.length();
-    var request = new http.MultipartRequest('POST', uri);
+    Dio dio = new Dio();
+      FormData formData = new FormData();
+      formData.add('petId', petId);
+      formData.add('file', new UploadFileInfo(imageFile, basename(imageFile.path)));
+      final response = await dio.post(
+        "${constants['urlApi']}/pet/uploadImage",
+        data: formData,
+        options: Options(
+          method: 'POST'
+        )
+      );
 
-    request.fields['petId'] = petId;
-    request.files.add(new http.MultipartFile('fiel', stream, length));
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception('Falló el servicio loadPetImage');
+    }
+  }
 
-    var response = await request.send();
+  static Future<dynamic> getServices() async {
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.get("${constants['urlApi']}/pet/getServices",
+      headers: {
+        'Authorization': 'Bearer $token'
+      }
+    );
 
-    return response;
-
-    // print(response.statusCode);
-
-    // response.stream.transform(utf8.decoder).listen((value) {
-    //   return value;
-    // });
+    if(response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Falló el servicio getServices');
+    }
   }
 }

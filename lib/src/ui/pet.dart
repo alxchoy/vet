@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../providers/models/pet-model.dart';
 import '../providers/services/pet-service.dart';
-import '../providers/services/shared-preferences.dart';
+import '../providers/services/shared-preferences-service.dart';
 import '../shared/widgets/vet-input.dart';
 import '../shared/widgets/vet-combo.dart';
 import '../shared/widgets/vet-date.dart';
@@ -37,13 +37,19 @@ class _PetScreenState extends State<PetScreen> {
     widget.pet.petPathImage = value['petPathImage'];
   }
 
+  void _getEvolutionPet() async {
+    final response = await PetService.getEvolutionPet(idPet: widget.pet.petId);
+    await Navigator.pushNamed(context, '/stadistics', arguments: response);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final Pet pet = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pet')
+        title: Text('Pet'),
+        actions: <Widget>[
+          IconButton(icon: Icon(VetAppIcons.stadistic), onPressed: widget.pet != null ? _getEvolutionPet : null)
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

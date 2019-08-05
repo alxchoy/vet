@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './bandeja.dart';
+import './pet/bandeja.dart';
 import './profile.dart';
 import './subscription.dart';
 import './services.dart';

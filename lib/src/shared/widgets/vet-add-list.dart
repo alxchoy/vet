@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import './vet-search-list.dart';
 
-import '../../providers/services/shared-preferences.dart';
+import '../../providers/services/shared-preferences-service.dart';
 import '../../providers/services/pet-service.dart';
 import '../vet_app_icons.dart';
 

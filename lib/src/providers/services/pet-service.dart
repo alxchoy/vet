@@ -10,7 +10,7 @@ import '../models/pet-model.dart';
 import '../models/disease-model.dart';
 import '../models/provider-model.dart';
 import '../../shared/constants.dart';
-import './shared-preferences.dart';
+import './shared-preferences-service.dart';
 
 class PetService {
   static Future<List<Pet>> getPetsList(String clientId) async {
@@ -255,6 +255,41 @@ class PetService {
       return json.decode(response.body);
     } else {
       throw Exception('Falló el servicio getServices');
+    }
+  }
+
+  static Future<dynamic> getProvidersByService({idService}) async {
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.get("${constants['urlApi']}/pet/getProviderByService/$idService",
+      headers: {
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if(response.statusCode == 200) {
+      final responseDecode = json.decode(response.body);
+      List<Provider> providers = List<Provider>();
+      for (var provider in responseDecode) {
+        providers.add(Provider.fromJson(provider));
+      }
+      return providers;
+    } else {
+      throw Exception('Falló el servicio getServices');
+    }
+  }
+
+  static Future<dynamic> getEvolutionPet({idPet}) async {
+    final token = await SharedPreferencesVet.getToken();
+    final response = await http.get("${constants['urlApi']}/pet/getEvolution/$idPet",
+      headers: {
+        'Authorization': 'Bearer $token'
+      }
+    );
+
+    if(response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Falló el servicio getEvolutionPet');
     }
   }
 }

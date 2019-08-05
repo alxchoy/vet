@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import './screens/home.dart';
-import './screens/login.dart';
-import './screens/navigation.dart';
-import './screens/pet.dart';
-import './screens/result.dart';
-import './screens/provider.dart';
-import './screens/register.dart';
+import './ui/home.dart';
+import './ui/auth/login.dart';
+import './ui/navigation.dart';
+import './ui/pet.dart';
+import './ui/result.dart';
+import './ui/provider.dart';
+import './ui/auth/register.dart';
+import './ui/stadistics.dart';
 
 class App extends StatelessWidget {
   @override
@@ -20,10 +21,15 @@ class App extends StatelessWidget {
         '/pet': (context) => PetScreen(),
         '/result': (context) => ResultScreen(),
         '/provider': (context) => ProviderScreen(),
-        '/register': (context) => RegisterScreen()
+        '/register': (context) => RegisterScreen(),
+        '/stadistics': (context) => StadisticsScreen()
       },
       theme: ThemeData(
-        primaryColor: Color.fromRGBO(90, 168, 158, 1.0)
+        primaryColor: Color.fromRGBO(90, 168, 158, 1.0),
+        errorColor: Color.fromRGBO(202, 57, 48, 1.0),
+        textTheme: TextTheme(
+          body1: TextStyle(fontSize: 20.0)
+        )
       ),
     );
   }

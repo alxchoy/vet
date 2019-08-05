@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../shared/constants.dart';
-import './shared-preferences.dart';
+import './shared-preferences-service.dart';
 
 class ProviderService {
   static Future<dynamic> getProviderDetails({int providerId}) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../providers/services/shared-preferences.dart';
+import '../providers/services/shared-preferences-service.dart';
 import '../providers/services/client-service.dart';
 import '../providers/models/client-model.dart';
 

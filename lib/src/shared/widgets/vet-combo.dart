@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../../providers/services/shared-preferences.dart';
+import '../../providers/services/shared-preferences-service.dart';
 import '../constants.dart';
 
 class VetCombo extends StatefulWidget {

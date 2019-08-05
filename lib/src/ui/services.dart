@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../providers/services/pet-service.dart';
+import '../providers/models/disease-model.dart';
 import '../shared/widgets/vet-search-list.dart';
 
 class ServicesScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   bool _isLoaded = true;
   final inputController = TextEditingController();
   var listItems = [];
+  var listItemsFilter = [];
 
   @override
   void initState() {
@@ -30,32 +32,56 @@ class _ServicesScreenState extends State<ServicesScreen> {
   void _getServices() async {
     setState(() => _isLoaded = false);
     listItems = await PetService.getServices();
+    listItemsFilter = listItems;
     setState(() => _isLoaded = true);
   }
 
+  void _filterItems(input) {
+    final data = listItems.where((item) => item['serviceName'].toUpperCase().contains(input.toUpperCase())).toList();
+    setState(() {
+      listItemsFilter = data;
+    });
+  }
+
+  _getProvidersByService({idService}) async {
+    final response = await PetService.getProvidersByService(idService: idService);
+    await Navigator.pushNamed(context, '/result', arguments: {
+      'diseases': List<Disease>(),
+      'providers': response
+    });
+    // print(response);
+  }
+
   Widget _serviceRow({item}) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
+    return GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
+        ),
+        child: Text(
+          item['serviceName'],
+          style: TextStyle(fontSize: 18.0),
+          overflow: TextOverflow.ellipsis
+        ),
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0)
       ),
-      child: Row(
-        children: <Widget>[
-          Text(item['serviceDescription'], style: TextStyle(fontSize: 18.0)),
-        ]
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0)
+      onTap: () {
+        _getProvidersByService(idService: item['serviceId']);
+      }
     );
   }
 
-  Widget _servicesRowList() {
+  Widget _servicesRowList({list}) {
     List<Widget> _listRow = [];
 
-    for (var item in listItems) {
+    for (var item in list) {
       _listRow.add(_serviceRow(item: item));
     }
 
     return Column(
       children: _listRow,
+      crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
 
@@ -78,7 +104,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
           hintStyle: TextStyle(fontSize: 18.0)
         ),
         style: TextStyle(fontSize: 18.0),
-        controller: inputController
+        controller: inputController,
+        onChanged: (val) {
+          _filterItems(val);
+        }
       ),
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
     );
@@ -91,7 +120,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         child: _isLoaded ? Column(
           children: <Widget>[
             _searchInput(),
-            _servicesRowList()
+            _servicesRowList(list: listItemsFilter)
           ]
         ) : Container(
           child: Center(

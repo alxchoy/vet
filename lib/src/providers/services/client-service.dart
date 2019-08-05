@@ -1,29 +1,37 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 
+import './shared-preferences-service.dart';
 import '../models/client-model.dart';
 import '../../shared/constants.dart';
-import './shared-preferences.dart';
 
-class ClientService {
-  static Future<dynamic> login(String userName, String password) async {
-    Map<String, String> bodyRequest = {
-      'userName': userName,
-      'password': password,
-      'grant_type': 'password',
-      'rolId': '2'
-    };
+import './base-service.dart';
+import './api-service.dart';
 
-    return http.post(
-    "${constants['urlBase']}/token",
-      body: bodyRequest,
-      headers: {
-        "accept": "application/x-www-form-urlencoded",
-        "content-type": "application/x-www-form-urlencoded"
-      }
-    );
+class ClientService extends BaseService {
+  login({String userName, String password, context}) async {
+    final response = await this.callService(context: context, service: () => (
+      ApiService.postService(
+        apiUrl: '/token',
+        bodyRequest: {
+          'userName': userName,
+          'password': password,
+          'grant_type': 'password',
+          'rolId': '2'
+        },
+        opts: Options(contentType: ContentType.parse('application/x-www-form-urlencoded'))
+      )
+    ));
+
+    print('prueba $response');
+
+    return jsonDecode(response.toString());
   }
 
   static Future<dynamic> getClientId(String token) async {

@@ -34,7 +34,7 @@ class _ResultScreenState extends State<ResultScreen> {
         child: Container(
           child: Column(
             children: <Widget>[
-              DiseasesList(diseases: data['diseases']),
+              // DiseasesList(diseases: data['diseases']),
               ProvidersList(providers: data['providers']),
               Container(
                 child: VetButton(

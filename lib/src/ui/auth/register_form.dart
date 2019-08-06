@@ -28,11 +28,11 @@ class _RegisterFormState extends State<RegisterForm> {
           "UserPassword": _userPass,
           "ClientEmail": _userEmail
         };
-        final response = await ClientService.createClient(form: request);
+        // final response = await ClientService.createClient(form: request);
 
-        if (response['code'] == 1) {
-          await Navigator.pushNamed(context, '/login');
-        }
+        // if (response['code'] == 1) {
+        //   await Navigator.pushNamed(context, '/login');
+        // }
       } else {
         Helpers.showVetDialog(
           context: context,

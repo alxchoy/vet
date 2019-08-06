@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../bloc/login_bloc.dart';
-import '../../bloc/providers/login_bloc_provider.dart';
 import '../../shared/widgets/vet-input.dart';
+import '../../bloc/bloc_provider.dart';
+import '../../bloc/auth_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   final Function navigate;
@@ -16,7 +16,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  LoginBloc _bloc;
+  AuthBloc _bloc;
+
   final _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
   String _userName;
@@ -27,15 +28,15 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   void didChangeDependencies() {
-    _bloc = LoginBlocProvider.of(context);
+    _bloc = BlocProvider.of<AuthBloc>(context);
     super.didChangeDependencies();
   }
 
   void _validateForm({BuildContext context}) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      await _bloc.fetchUserToken(userName: _userName, password: _userPassword, context: context);
-      callback();
+      await _bloc.fetchToken(userName: _userName, password: _userPassword);
+      // callback();
     } else {
       setState(() => _autovalidate = true);
     }

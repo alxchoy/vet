@@ -4,15 +4,33 @@ import '../../bloc/providers/login_bloc_provider.dart';
 import './login_form.dart';
 import './auth_header.dart';
 
+import '../../bloc/bloc_provider.dart';
+import '../../bloc/auth_bloc.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  AuthBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = AuthBloc();
+  }
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return LoginBlocProvider(
+    return BlocProvider<AuthBloc>(
+      bloc: _bloc,
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(

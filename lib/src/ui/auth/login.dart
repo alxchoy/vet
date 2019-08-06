@@ -1,11 +1,12 @@
+ import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import '../../bloc/providers/login_bloc_provider.dart';
 import './login_form.dart';
 import './auth_header.dart';
-
 import '../../bloc/bloc_provider.dart';
-import '../../bloc/auth_bloc.dart';
+import '../../bloc/login_bloc.dart';
+import '../../bloc/form_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,12 +14,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  AuthBloc _bloc;
+  LoginBloc _bloc;
+  FormBloc _formBloc;
+
+  Map<String, StreamController> inputs = {
+    'userName': StreamController<String>(),
+    'password': StreamController<String>()
+  };
 
   @override
   void initState() {
     super.initState();
-    _bloc = AuthBloc();
+    _bloc = LoginBloc();
+    _formBloc = FormBloc(inputsStream: inputs);
   }
 
   @override
@@ -29,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
+    return BlocProvider<LoginBloc>(
       bloc: _bloc,
       child: Scaffold(
         body: SingleChildScrollView(
@@ -41,7 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: <Widget>[
                         AuthHeader(title: 'Bienvenido', subTitle: 'Regístrate para ingresar'),
-                        LoginForm(navigate: _goToNavigation)
+                        BlocProvider<FormBloc>(
+                          bloc: _formBloc,
+                          child: LoginForm(navigate: _goToNavigation)
+                        )
                       ]
                     )
                   ),

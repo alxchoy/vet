@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../../shared/widgets/vet-input.dart';
 import '../../bloc/bloc_provider.dart';
-import '../../bloc/auth_bloc.dart';
+import '../../bloc/login_bloc.dart';
+import '../../bloc/form_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   final Function navigate;
@@ -12,31 +11,31 @@ class LoginForm extends StatefulWidget {
   LoginForm({this.navigate});
 
   @override
-  _LoginFormState createState() => _LoginFormState(callback: navigate);
+  _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  AuthBloc _bloc;
-
   final _formKey = GlobalKey<FormState>();
+  LoginBloc _bloc;
+  FormBloc _formBloc;
   bool _autovalidate = false;
   String _userName;
   String _userPassword;
-  Function callback;
 
-  _LoginFormState({this.callback});
+  _LoginFormState();
 
   @override
   void didChangeDependencies() {
-    _bloc = BlocProvider.of<AuthBloc>(context);
+    _formBloc = BlocProvider.of<FormBloc>(context);
+    _bloc = BlocProvider.of<LoginBloc>(context);
     super.didChangeDependencies();
   }
 
   void _validateForm({BuildContext context}) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      await _bloc.fetchToken(userName: _userName, password: _userPassword);
-      // callback();
+      await _bloc.fetchToken(userName: _userName, password: _userPassword, context: context);
+      widget.navigate();
     } else {
       setState(() => _autovalidate = true);
     }
@@ -44,15 +43,16 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    print('FORM::: ${_formBloc.inputsStream}');
     return Form(
       autovalidate: _autovalidate,
       key: _formKey,
       child: Container(
         child: Column(
           children: <Widget>[
-            VetInput(label: 'Usuario', onSave: (val) => _userName = val),
+            VetInput(label: 'Usuario', inputProperty: 'userName'),
             SizedBox(height: 20.0,),
-            VetInput(label: 'Contraseña', onSave: (val) => _userPassword = val, inputType: 'password'),
+            // VetInput(label: 'Contraseña', onSave: (val) => _userPassword = val, inputType: 'password'),
             Container(
               alignment: Alignment.centerRight,
               child: Column(
@@ -60,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
                   Text(
                     'Recuperar contraseña',
                     style: TextStyle(
-                      color: Color.fromRGBO(90, 168, 158, 1.0),
+                      color: Theme.of(context).primaryColor,
                       fontSize: 17.0
                     )
                   ),

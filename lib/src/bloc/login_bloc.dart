@@ -7,16 +7,15 @@ import '../shared/shared_preferences_vet.dart';
 
 import '../utils/helpers.dart';
 
-class LoginBloc {
+import './bloc_provider.dart';
+
+class LoginBloc extends BlocBase {
   final _repository = Repository();
-  // final _loading = StreamController<bool>();
 
-  // Stream<bool> get loadingStatus => _loading.stream;
-
-  void fetchUserToken({String userName, String password, BuildContext context}) async {
-    // _loading.sink.add(true);
+  void fetchToken({String userName, String password, BuildContext context}) async {
     Helpers.showLoader(context: context);
     final data = await _repository.loginClient(userName: userName, password: password);
+    print(data);
     await SharedPreferencesVet().setToken(data['access_token']);
 
     await this._fetchAllLookups(ctx: context);
@@ -26,6 +25,10 @@ class LoginBloc {
     final lookups = await _repository.fetchLookups();
     await SharedPreferencesVet().setLookups(lookups);
     Helpers.dismissLoader(context: ctx);
-    // _loading.sink.add(false);
+  }
+
+  @override
+  void dispose() {
+    // implements dispose stream
   }
 }

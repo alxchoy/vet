@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../../../shared/widgets/vet-input.dart';
@@ -14,7 +12,6 @@ class _LoginFormState extends State<LoginForm> {
   bool _autovalidate = false;
   String _userName;
   String _userPassword;
-  Function callback;
 
   void _validateForm({BuildContext context}) async {
     if (_formKey.currentState.validate()) {
@@ -34,9 +31,9 @@ class _LoginFormState extends State<LoginForm> {
       child: Container(
         child: Column(
           children: <Widget>[
-            VetInput(label: 'Usuario', onSave: (val) => _userName = val),
+            VetInput(label: 'Usuario', inputProperty: 'userName'),
             SizedBox(height: 20.0,),
-            VetInput(label: 'Contraseña', onSave: (val) => _userPassword = val, inputType: 'password'),
+            // VetInput(label: 'Contraseña', onSave: (val) => _userPassword = val, inputType: 'password'),
             Container(
               alignment: Alignment.centerRight,
               child: Column(
@@ -44,7 +41,7 @@ class _LoginFormState extends State<LoginForm> {
                   Text(
                     'Recuperar contraseña',
                     style: TextStyle(
-                      color: Color.fromRGBO(90, 168, 158, 1.0),
+                      color: Theme.of(context).primaryColor,
                       fontSize: 17.0
                     )
                   ),

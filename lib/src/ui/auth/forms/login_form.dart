@@ -2,41 +2,25 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/vet-input.dart';
-import '../../bloc/bloc_provider.dart';
-import '../../bloc/auth_bloc.dart';
+import '../../../shared/widgets/vet-input.dart';
 
 class LoginForm extends StatefulWidget {
-  final Function navigate;
-
-  LoginForm({this.navigate});
-
   @override
-  _LoginFormState createState() => _LoginFormState(callback: navigate);
+  _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  AuthBloc _bloc;
-
   final _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
   String _userName;
   String _userPassword;
   Function callback;
 
-  _LoginFormState({this.callback});
-
-  @override
-  void didChangeDependencies() {
-    _bloc = BlocProvider.of<AuthBloc>(context);
-    super.didChangeDependencies();
-  }
-
   void _validateForm({BuildContext context}) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      await _bloc.fetchToken(userName: _userName, password: _userPassword);
-      // callback();
+      // await _bloc.fetchToken(userName: _userName, password: _userPassword);
+      print('validate login form');
     } else {
       setState(() => _autovalidate = true);
     }

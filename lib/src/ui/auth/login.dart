@@ -1,36 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../bloc/providers/login_bloc_provider.dart';
-import './login_form.dart';
 import './auth_header.dart';
+import './forms/login_form.dart';
 
-import '../../bloc/bloc_provider.dart';
-import '../../bloc/auth_bloc.dart';
-
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  AuthBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = AuthBloc();
-  }
-
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      bloc: _bloc,
+    return Container(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
@@ -41,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: <Widget>[
                         AuthHeader(title: 'Bienvenido', subTitle: 'Regístrate para ingresar'),
-                        LoginForm(navigate: _goToNavigation)
+                        LoginForm()
                       ]
                     )
                   ),
@@ -64,9 +42,5 @@ class _LoginScreenState extends State<LoginScreen> {
         )
       )
     );
-  }
-
-  _goToNavigation() {
-    Navigator.pushNamed(context, '/navigation');
   }
 }

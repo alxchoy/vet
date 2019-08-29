@@ -8,27 +8,23 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      child: Column(
-        children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context),
-          ),
-          Padding(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 36.0,
-                fontWeight: FontWeight.bold
-              ),
+    return SafeArea(
+      child: Container(
+        alignment: Alignment.centerLeft,
+        child: Column(
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.pop(context),
             ),
-            padding: EdgeInsets.only(left: 35.0),
-          ),
-          _subtitleWidget()
-        ],
-        crossAxisAlignment: CrossAxisAlignment.start
+            Padding(
+              child: Text(title, style: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold)),
+              padding: EdgeInsets.only(left: 35.0),
+            ),
+            _subtitleWidget()
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start
+        )
       )
     );
   }
@@ -36,12 +32,7 @@ class AuthHeader extends StatelessWidget {
   Widget _subtitleWidget() {
     if (subTitle != null) {
       return Padding(
-        child: Text(
-          subTitle,
-          style: TextStyle(
-            fontSize: 18.0
-          ),
-        ),
+        child: Text(subTitle, style: TextStyle(fontSize: 18.0)),
         padding: EdgeInsets.only(left: 35.0),
       );
     } else {

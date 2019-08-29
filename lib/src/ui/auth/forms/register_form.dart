@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../resources/services/client_service.dart';
-import '../../../shared/widgets/vet-input.dart';
-import '../../../utils/helpers.dart';
+import 'package:veterinary/src/utils/helpers.dart';
+import 'package:veterinary/src/widgets/vet_input.dart';
 
 class RegisterForm extends StatefulWidget {
 

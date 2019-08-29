@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import '../../shared/constants.dart';
+import 'package:veterinary/src/utils/constants.dart';
 
 class LookupsService {
   loadLookups() async {

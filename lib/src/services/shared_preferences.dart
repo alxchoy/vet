@@ -1,35 +1,33 @@
-import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesVet {
-  void setToken(String token) async {
+  static setToken(String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setString('vet_token', token);
   }
 
-  void setClientId(String data) async {
+  static Future<String> getToken() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('vet_token');
+  }
+
+  static Future<void> setClientId(String data) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setString('vet_clientId', data);
   }
 
-  void setLookups(Map lookups) async {
+  static Future<String> getClientId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.setString('vet_lookups', jsonEncode(lookups));
+    return preferences.getString('vet_clientId');
   }
 
-  Future<String> getToken() async {
+  static Future<void> setLookups(String lookups) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getString('vet_token');
+    await preferences.setString('vet_lookups', lookups);
   }
 
-  Future<String> getClientId() async {
+  static Future<String> getLookups() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getString('vet_clientId');
-  }
-
-  Future<String> getLookups() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getString('vet_lookups');
+    return preferences.getString('vet_lookups');
   }
 }

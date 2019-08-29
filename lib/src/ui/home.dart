@@ -33,10 +33,13 @@ class Home extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          child: Text(
-            'INGRESAR',
-            style: TextStyle(fontSize: 20, color: Colors.white),
-            textAlign: TextAlign.center
+          child: Padding(
+            child: Text(
+              'INGRESAR',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+              textAlign: TextAlign.center
+            ),
+            padding: EdgeInsets.symmetric(vertical: 15.0)
           ),
           onTap: () => Navigator.pushNamed(context, '/login'),
         )
@@ -53,8 +56,7 @@ class Home extends StatelessWidget {
             Color.fromRGBO(55, 112, 150, 1.0),
           ]
         )
-      ),
-      padding: EdgeInsets.symmetric(vertical: 15.0)
+      )
     );
   }
 

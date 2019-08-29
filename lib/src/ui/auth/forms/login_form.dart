@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../shared/widgets/vet-input.dart';
+import 'package:veterinary/src/widgets/vet_input.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -31,9 +31,9 @@ class _LoginFormState extends State<LoginForm> {
       child: Container(
         child: Column(
           children: <Widget>[
-            VetInput(label: 'Usuario', inputProperty: 'userName'),
+            VetInput(label: 'Usuario', onSave: (val) => _userName = val),
             SizedBox(height: 20.0,),
-            // VetInput(label: 'Contraseña', onSave: (val) => _userPassword = val, inputType: 'password'),
+            VetInput(label: 'Contraseña', inputType: 'password', onSave: (val) => _userPassword = val),
             Container(
               alignment: Alignment.centerRight,
               child: Column(

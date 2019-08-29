@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../shared/widgets/vet-button.dart';
+import 'package:veterinary/src/widgets/vet_button.dart';
 
 class Helpers {
   static showVetDialog({BuildContext context, String description, dynamic btnConfig}) async {
@@ -34,7 +34,7 @@ class Helpers {
     );
   }
 
-  static showLoader({BuildContext context}) {
+  static showLoader({@required BuildContext context}) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -52,7 +52,7 @@ class Helpers {
     );
   }
 
-  static dismissLoader({BuildContext context}) {
+  static dismissLoader({@required BuildContext context}) {
     Navigator.pop(context);
   }
 }

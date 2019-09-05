@@ -18,9 +18,9 @@ class App extends StatelessWidget {
         '/': (context) => Home(),
         '/login': (context) => LoginScreen(),
         '/navigation': (context) => NavigationScreen(),
-        '/pet': (context) => PetScreen(),
-        '/result': (context) => ResultScreen(),
-        '/provider': (context) => ProviderScreen(),
+        // '/pet': (context) => PetScreen(),
+        // '/result': (context) => ResultScreen(),
+        // '/provider': (context) => ProviderScreen(),
         '/register': (context) => RegisterScreen(),
         '/stadistics': (context) => StadisticsScreen()
       },

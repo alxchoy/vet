@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:veterinary/src/utils/vet_app_icons.dart';
+
 import './pet/bandeja.dart';
 import './profile.dart';
 import './subscription.dart';
 import './services.dart';
-
-import '../shared/vet_app_icons.dart';
 
 class NavigationScreen extends StatefulWidget {
   @override
@@ -15,9 +15,9 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   int _currentScreen = 0;
   List<Widget> _screens = [
-    BandejaScreen(),
-    ProfileScreen(),
-    ServicesScreen(),
+    // BandejaScreen(),
+    // ProfileScreen(),
+    // ServicesScreen(),
     SubscriptionScreen()
   ];
   List<String> _titles = [
